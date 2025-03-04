@@ -12,9 +12,22 @@ To check GitHub Actions workflow status and logs:
 
 ## Documentation
 
-To deploy the documentation site to GitHub Pages:
+To build and deploy documentation:
+
+1. First, generate the documentation with TypeDoc:
 ```
-npm run deploy-docs
+npm run docs
 ```
 
-This command builds the project, generates documentation with TypeDoc, and deploys to GitHub Pages using the gh-pages package.
+2. The docs are generated in the `docs` folder in HTML format
+   
+3. GitHub Pages is configured to serve directly from the `docs` folder in the main branch
+
+4. After making documentation changes, commit and push the updated docs to the main branch:
+```
+git add docs
+git commit -m "Update documentation"
+git push
+```
+
+The documentation site will be available at https://fizx.github.io/devvit-phaser

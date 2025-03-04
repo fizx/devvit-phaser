@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/devvit-phaser.svg)](https://www.npmjs.com/package/devvit-phaser)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Tests](https://github.com/fizx/devvit-phaser/actions/workflows/tests.yml/badge.svg)](https://github.com/fizx/devvit-phaser/actions/workflows/tests.yml)
 
 A library to integrate Phaser.js with Reddit's Devvit platform for building interactive multiplayer games. This library provides a simple, yet powerful framework for creating multiplayer games with synchronized state between players.
 
