@@ -8,7 +8,9 @@
     "build": "tsc",
     "prepublishOnly": "npm run build",
     "docs": "typedoc",
-    "docs:serve": "npx serve docs"
+    "docs:serve": "npx serve docs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "keywords": [
     "devvit",
@@ -27,12 +29,16 @@
   },
   "homepage": "https://fizx.github.io/devvit-phaser",
   "devDependencies": {
-    "typescript": "^5.0.0",
+    "@devvit/public-api": "^0.11.7",
+    "@types/uuid": "^10.0.0",
     "typedoc": "^0.25.0",
-    "@typedoc/plugin-markdown": "^4.0.0"
+    "typedoc-plugin-markdown": "^3.16.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.7"
   },
   "peerDependencies": {
     "@devvit/public-api": "^0.10.0",
+    "devvit": "^0.11.0",
     "phaser": "^3.60.0"
   },
   "dependencies": {
