@@ -1,0 +1,41 @@
+{
+  "name": "devvit-phaser",
+  "version": "0.1.0",
+  "description": "A library to integrate Phaser.js with Reddit's Devvit platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "docs": "typedoc",
+    "docs:serve": "npx serve docs"
+  },
+  "keywords": [
+    "devvit",
+    "phaser",
+    "reddit",
+    "games"
+  ],
+  "author": "Kyle Dawkins <kyle@fizx.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fizx/devvit-phaser.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fizx/devvit-phaser/issues"
+  },
+  "homepage": "https://fizx.github.io/devvit-phaser",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "typedoc": "^0.25.0",
+    "@typedoc/plugin-markdown": "^4.0.0"
+  },
+  "peerDependencies": {
+    "@devvit/public-api": "^0.10.0",
+    "phaser": "^3.60.0"
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
+  }
+}

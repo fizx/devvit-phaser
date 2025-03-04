@@ -1,0 +1,19 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["./src/index.ts"],
+  "out": "docs/api",
+  "plugin": ["@typedoc/plugin-markdown"],
+  "name": "devvit-phaser",
+  "readme": "README.md",
+  "includeVersion": true,
+  "entryPointStrategy": "expand",
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "categorizeByGroup": true,
+  "sort": ["source-order"],
+  "navigationLinks": {
+    "GitHub": "https://github.com/fizx/devvit-phaser",
+    "npm": "https://www.npmjs.com/package/devvit-phaser"
+  }
+}
