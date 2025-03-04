@@ -78,7 +78,7 @@ managers, which are the primary way to do multiplayer communication.
 
 #### Defined in
 
-[server/PhaserGameServer.ts:19](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L19)
+[server/PhaserGameServer.ts:19](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L19)
 
 ## Properties
 
@@ -92,7 +92,7 @@ managers, which are the primary way to do multiplayer communication.
 
 #### Defined in
 
-core/BasicGameServer.tsx:296
+[core/BasicGameServer.tsx:296](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L296)
 
 ___
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-core/BasicGameServer.tsx:301
+[core/BasicGameServer.tsx:301](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L301)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-core/BasicGameServer.tsx:308
+[core/BasicGameServer.tsx:308](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L308)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-core/BasicGameServer.tsx:313
+[core/BasicGameServer.tsx:313](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L313)
 
 ## Accessors
 
@@ -154,7 +154,7 @@ BasicGameServer.redis
 
 #### Defined in
 
-core/BasicGameServer.tsx:260
+[core/BasicGameServer.tsx:260](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L260)
 
 ___
 
@@ -174,7 +174,7 @@ BasicGameServer.reddit
 
 #### Defined in
 
-core/BasicGameServer.tsx:267
+[core/BasicGameServer.tsx:267](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L267)
 
 ___
 
@@ -195,7 +195,7 @@ BasicGameServer.userId
 
 #### Defined in
 
-core/BasicGameServer.tsx:275
+[core/BasicGameServer.tsx:275](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L275)
 
 ___
 
@@ -215,7 +215,7 @@ BasicGameServer.postId
 
 #### Defined in
 
-core/BasicGameServer.tsx:282
+[core/BasicGameServer.tsx:282](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L282)
 
 ___
 
@@ -235,7 +235,7 @@ BasicGameServer.userInfo
 
 #### Defined in
 
-core/BasicGameServer.tsx:289
+[core/BasicGameServer.tsx:289](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L289)
 
 ## Methods
 
@@ -261,7 +261,7 @@ This method is called when a new post is created. You can use this to initialize
 
 #### Defined in
 
-core/BasicGameServer.tsx:34
+[core/BasicGameServer.tsx:34](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L34)
 
 ___
 
@@ -288,7 +288,7 @@ message to the webview. You can override this method to customize the behavior.
 
 #### Defined in
 
-core/BasicGameServer.tsx:54
+[core/BasicGameServer.tsx:54](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L54)
 
 ___
 
@@ -315,7 +315,7 @@ You can use this method to broadcast a message to all of your players.
 
 #### Defined in
 
-core/BasicGameServer.tsx:75
+[core/BasicGameServer.tsx:75](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L75)
 
 ___
 
@@ -342,7 +342,7 @@ a more global context, like a timer event, there won't be a webview to send a me
 
 #### Defined in
 
-core/BasicGameServer.tsx:89
+[core/BasicGameServer.tsx:89](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L89)
 
 ___
 
@@ -368,7 +368,7 @@ This subscribes the current player to a channel.
 
 #### Defined in
 
-core/BasicGameServer.tsx:102
+[core/BasicGameServer.tsx:102](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L102)
 
 ___
 
@@ -395,7 +395,7 @@ changes, etc. By default, this method broadcasts the timer event to the postId c
 
 #### Defined in
 
-core/BasicGameServer.tsx:114
+[core/BasicGameServer.tsx:114](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L114)
 
 ___
 
@@ -421,7 +421,7 @@ This unsubscribes the current player from a channel.
 
 #### Defined in
 
-core/BasicGameServer.tsx:124
+[core/BasicGameServer.tsx:124](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L124)
 
 ___
 
@@ -447,7 +447,7 @@ Cancels a scheduled timer event
 
 #### Defined in
 
-core/BasicGameServer.tsx:134
+[core/BasicGameServer.tsx:134](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L134)
 
 ___
 
@@ -482,7 +482,7 @@ Error if no postId is present in the context
 
 #### Defined in
 
-core/BasicGameServer.tsx:148
+[core/BasicGameServer.tsx:148](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L148)
 
 ___
 
@@ -517,7 +517,7 @@ Error if no postId is present in the context
 
 #### Defined in
 
-core/BasicGameServer.tsx:180
+[core/BasicGameServer.tsx:180](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L180)
 
 ___
 
@@ -543,7 +543,7 @@ Internal method to process and fire scheduled timer events
 
 #### Defined in
 
-core/BasicGameServer.tsx:210
+[core/BasicGameServer.tsx:210](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L210)
 
 ___
 
@@ -565,7 +565,7 @@ The Devvit instance with the game server added.
 
 #### Defined in
 
-core/BasicGameServer.tsx:324
+[core/BasicGameServer.tsx:324](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L324)
 
 ___
 
@@ -585,7 +585,7 @@ ___
 
 #### Defined in
 
-[server/PhaserGameServer.ts:23](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L23)
+[server/PhaserGameServer.ts:23](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L23)
 
 ___
 
@@ -609,7 +609,7 @@ data. If not, throw an error to prevent the creation.
 
 #### Defined in
 
-[server/PhaserGameServer.ts:36](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L36)
+[server/PhaserGameServer.ts:36](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L36)
 
 ___
 
@@ -633,7 +633,7 @@ this data. If not, throw an error to prevent the write.
 
 #### Defined in
 
-[server/PhaserGameServer.ts:45](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L45)
+[server/PhaserGameServer.ts:45](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L45)
 
 ___
 
@@ -656,7 +656,7 @@ A player has joined the game. By default, this will
 
 #### Defined in
 
-[server/PhaserGameServer.ts:49](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L49)
+[server/PhaserGameServer.ts:49](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L49)
 
 ___
 
@@ -676,7 +676,7 @@ ___
 
 #### Defined in
 
-[server/PhaserGameServer.ts:58](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L58)
+[server/PhaserGameServer.ts:58](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L58)
 
 ___
 
@@ -696,7 +696,7 @@ ___
 
 #### Defined in
 
-[server/PhaserGameServer.ts:63](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L63)
+[server/PhaserGameServer.ts:63](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L63)
 
 ___
 
@@ -716,7 +716,7 @@ ___
 
 #### Defined in
 
-[server/PhaserGameServer.ts:69](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L69)
+[server/PhaserGameServer.ts:69](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L69)
 
 ___
 
@@ -736,7 +736,7 @@ ___
 
 #### Defined in
 
-[server/PhaserGameServer.ts:75](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L75)
+[server/PhaserGameServer.ts:75](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L75)
 
 ___
 
@@ -763,4 +763,4 @@ this method will broadcast the message to the postId channel. You can override t
 
 #### Defined in
 
-[server/PhaserGameServer.ts:104](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/PhaserGameServer.ts#L104)
+[server/PhaserGameServer.ts:104](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/PhaserGameServer.ts#L104)

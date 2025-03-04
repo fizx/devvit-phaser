@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[server/DataManagerServer.ts:6](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L6)
+[server/DataManagerServer.ts:6](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L6)
 
 ## Properties
 
@@ -62,7 +62,7 @@
 
 #### Defined in
 
-[server/DataManagerServer.ts:6](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L6)
+[server/DataManagerServer.ts:6](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L6)
 
 ## Accessors
 
@@ -76,7 +76,7 @@
 
 #### Defined in
 
-[server/DataManagerServer.ts:8](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L8)
+[server/DataManagerServer.ts:8](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L8)
 
 ## Methods
 
@@ -96,7 +96,7 @@
 
 #### Defined in
 
-[server/DataManagerServer.ts:25](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L25)
+[server/DataManagerServer.ts:25](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L25)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:62](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L62)
+[server/DataManagerServer.ts:62](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L62)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:70](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L70)
+[server/DataManagerServer.ts:70](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L70)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:79](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L79)
+[server/DataManagerServer.ts:79](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L79)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:84](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L84)
+[server/DataManagerServer.ts:84](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L84)
 
 ___
 
@@ -191,7 +191,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:91](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L91)
+[server/DataManagerServer.ts:91](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L91)
 
 ___
 
@@ -212,7 +212,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:97](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L97)
+[server/DataManagerServer.ts:97](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L97)
 
 ___
 
@@ -232,7 +232,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:108](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L108)
+[server/DataManagerServer.ts:108](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L108)
 
 ___
 
@@ -252,7 +252,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:117](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L117)
+[server/DataManagerServer.ts:117](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L117)
 
 ___
 
@@ -266,7 +266,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:124](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L124)
+[server/DataManagerServer.ts:124](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L124)
 
 ___
 
@@ -286,7 +286,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:134](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L134)
+[server/DataManagerServer.ts:134](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L134)
 
 ___
 
@@ -300,7 +300,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:138](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L138)
+[server/DataManagerServer.ts:138](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L138)
 
 ___
 
@@ -314,7 +314,7 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:142](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L142)
+[server/DataManagerServer.ts:142](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L142)
 
 ___
 
@@ -328,4 +328,4 @@ ___
 
 #### Defined in
 
-[server/DataManagerServer.ts:146](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/server/DataManagerServer.ts#L146)
+[server/DataManagerServer.ts:146](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/server/DataManagerServer.ts#L146)

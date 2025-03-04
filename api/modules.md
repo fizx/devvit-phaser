@@ -46,7 +46,7 @@ const post: PostInfo = { postId: "t3_abc123" };
 
 #### Defined in
 
-[core/types.ts:14](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/core/types.ts#L14)
+[core/types.ts:14](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/types.ts#L14)
 
 ___
 
@@ -79,7 +79,7 @@ const user: UserInfo = {
 
 #### Defined in
 
-[core/types.ts:34](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/core/types.ts#L34)
+[core/types.ts:34](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/types.ts#L34)
 
 ___
 
@@ -125,7 +125,7 @@ const interval: TimerEvent = {
 
 #### Defined in
 
-[core/types.ts:74](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/core/types.ts#L74)
+[core/types.ts:74](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/types.ts#L74)
 
 ___
 
@@ -158,7 +158,7 @@ const message: BroadcastMessage = {
 
 #### Defined in
 
-[core/types.ts:115](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/core/types.ts#L115)
+[core/types.ts:115](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/types.ts#L115)
 
 ___
 
@@ -196,7 +196,7 @@ const globalHighScoresId: DataManagerId = {
 
 #### Defined in
 
-[types.ts:24](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/types.ts#L24)
+[types.ts:24](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/types.ts#L24)
 
 ___
 
@@ -246,7 +246,7 @@ const incrementMutation: DataManagerMutation = {
 
 #### Defined in
 
-[types.ts:69](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/types.ts#L69)
+[types.ts:69](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/types.ts#L69)
 
 ___
 
@@ -285,4 +285,4 @@ const unsubscription: DataManagerSubscription = {
 
 #### Defined in
 
-[types.ts:113](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/types.ts#L113)
+[types.ts:113](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/types.ts#L113)

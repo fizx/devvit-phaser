@@ -67,7 +67,7 @@ customize the behavior of the game server. Look at the specific method documenta
 
 #### Defined in
 
-core/BasicGameServer.tsx:27
+[core/BasicGameServer.tsx:27](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L27)
 
 ## Properties
 
@@ -77,7 +77,7 @@ core/BasicGameServer.tsx:27
 
 #### Defined in
 
-core/BasicGameServer.tsx:296
+[core/BasicGameServer.tsx:296](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L296)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-core/BasicGameServer.tsx:301
+[core/BasicGameServer.tsx:301](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L301)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-core/BasicGameServer.tsx:308
+[core/BasicGameServer.tsx:308](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L308)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-core/BasicGameServer.tsx:313
+[core/BasicGameServer.tsx:313](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L313)
 
 ## Accessors
 
@@ -123,7 +123,7 @@ This is a helper method to get the Redis client. All of your game state should b
 
 #### Defined in
 
-core/BasicGameServer.tsx:260
+[core/BasicGameServer.tsx:260](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L260)
 
 ___
 
@@ -139,7 +139,7 @@ This is a helper method to get the Reddit API client. You can use this to intera
 
 #### Defined in
 
-core/BasicGameServer.tsx:267
+[core/BasicGameServer.tsx:267](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L267)
 
 ___
 
@@ -156,7 +156,7 @@ this is a TimerEvent handler.
 
 #### Defined in
 
-core/BasicGameServer.tsx:275
+[core/BasicGameServer.tsx:275](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L275)
 
 ___
 
@@ -172,7 +172,7 @@ This is a helper method to get the current post id.
 
 #### Defined in
 
-core/BasicGameServer.tsx:282
+[core/BasicGameServer.tsx:282](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L282)
 
 ___
 
@@ -188,7 +188,7 @@ This is a helper method to get the current user info.
 
 #### Defined in
 
-core/BasicGameServer.tsx:289
+[core/BasicGameServer.tsx:289](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L289)
 
 ## Methods
 
@@ -210,7 +210,7 @@ This method is called when a new post is created. You can use this to initialize
 
 #### Defined in
 
-core/BasicGameServer.tsx:34
+[core/BasicGameServer.tsx:34](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L34)
 
 ___
 
@@ -233,7 +233,7 @@ this method will broadcast the message to the postId channel. You can override t
 
 #### Defined in
 
-core/BasicGameServer.tsx:42
+[core/BasicGameServer.tsx:42](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L42)
 
 ___
 
@@ -256,7 +256,7 @@ message to the webview. You can override this method to customize the behavior.
 
 #### Defined in
 
-core/BasicGameServer.tsx:54
+[core/BasicGameServer.tsx:54](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L54)
 
 ___
 
@@ -275,7 +275,7 @@ A player has joined the game. By default, this will
 
 #### Defined in
 
-core/BasicGameServer.tsx:64
+[core/BasicGameServer.tsx:64](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L64)
 
 ___
 
@@ -298,7 +298,7 @@ You can use this method to broadcast a message to all of your players.
 
 #### Defined in
 
-core/BasicGameServer.tsx:75
+[core/BasicGameServer.tsx:75](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L75)
 
 ___
 
@@ -321,7 +321,7 @@ a more global context, like a timer event, there won't be a webview to send a me
 
 #### Defined in
 
-core/BasicGameServer.tsx:89
+[core/BasicGameServer.tsx:89](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L89)
 
 ___
 
@@ -343,7 +343,7 @@ This subscribes the current player to a channel.
 
 #### Defined in
 
-core/BasicGameServer.tsx:102
+[core/BasicGameServer.tsx:102](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L102)
 
 ___
 
@@ -366,7 +366,7 @@ changes, etc. By default, this method broadcasts the timer event to the postId c
 
 #### Defined in
 
-core/BasicGameServer.tsx:114
+[core/BasicGameServer.tsx:114](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L114)
 
 ___
 
@@ -388,7 +388,7 @@ This unsubscribes the current player from a channel.
 
 #### Defined in
 
-core/BasicGameServer.tsx:124
+[core/BasicGameServer.tsx:124](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L124)
 
 ___
 
@@ -410,7 +410,7 @@ Cancels a scheduled timer event
 
 #### Defined in
 
-core/BasicGameServer.tsx:134
+[core/BasicGameServer.tsx:134](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L134)
 
 ___
 
@@ -441,7 +441,7 @@ Error if no postId is present in the context
 
 #### Defined in
 
-core/BasicGameServer.tsx:148
+[core/BasicGameServer.tsx:148](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L148)
 
 ___
 
@@ -472,7 +472,7 @@ Error if no postId is present in the context
 
 #### Defined in
 
-core/BasicGameServer.tsx:180
+[core/BasicGameServer.tsx:180](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L180)
 
 ___
 
@@ -494,7 +494,7 @@ Internal method to process and fire scheduled timer events
 
 #### Defined in
 
-core/BasicGameServer.tsx:210
+[core/BasicGameServer.tsx:210](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L210)
 
 ___
 
@@ -512,4 +512,4 @@ The Devvit instance with the game server added.
 
 #### Defined in
 
-core/BasicGameServer.tsx:324
+[core/BasicGameServer.tsx:324](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/core/BasicGameServer.tsx#L324)

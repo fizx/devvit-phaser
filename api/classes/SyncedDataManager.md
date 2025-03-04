@@ -51,7 +51,7 @@ Phaser.Data.DataManager.constructor
 
 #### Defined in
 
-[client/SyncedDataManager.ts:55](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/client/SyncedDataManager.ts#L55)
+[client/SyncedDataManager.ts:55](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/client/SyncedDataManager.ts#L55)
 
 ## Properties
 
@@ -61,7 +61,7 @@ Phaser.Data.DataManager.constructor
 
 #### Defined in
 
-[client/SyncedDataManager.ts:52](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/client/SyncedDataManager.ts#L52)
+[client/SyncedDataManager.ts:52](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/client/SyncedDataManager.ts#L52)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[client/SyncedDataManager.ts:53](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/client/SyncedDataManager.ts#L53)
+[client/SyncedDataManager.ts:53](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/client/SyncedDataManager.ts#L53)
 
 ## Methods
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-[client/SyncedDataManager.ts:78](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/client/SyncedDataManager.ts#L78)
+[client/SyncedDataManager.ts:78](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/client/SyncedDataManager.ts#L78)
 
 ___
 
@@ -117,7 +117,7 @@ Phaser.Data.DataManager.set
 
 #### Defined in
 
-[client/SyncedDataManager.ts:98](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/client/SyncedDataManager.ts#L98)
+[client/SyncedDataManager.ts:98](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/client/SyncedDataManager.ts#L98)
 
 ___
 
@@ -141,7 +141,7 @@ Phaser.Data.DataManager.remove
 
 #### Defined in
 
-[client/SyncedDataManager.ts:108](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/client/SyncedDataManager.ts#L108)
+[client/SyncedDataManager.ts:108](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/client/SyncedDataManager.ts#L108)
 
 ___
 
@@ -166,7 +166,7 @@ Phaser.Data.DataManager.inc
 
 #### Defined in
 
-[client/SyncedDataManager.ts:118](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/client/SyncedDataManager.ts#L118)
+[client/SyncedDataManager.ts:118](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/client/SyncedDataManager.ts#L118)
 
 ___
 
@@ -184,4 +184,4 @@ Phaser.Data.DataManager.destroy
 
 #### Defined in
 
-[client/SyncedDataManager.ts:138](https://github.com/fizx/devvit-phaser/blob/412a642a3a98a03bf90214530acba9c58185c5cb/src/client/SyncedDataManager.ts#L138)
+[client/SyncedDataManager.ts:138](https://github.com/fizx/devvit-phaser/blob/da39dfcea76f95c889f53fe4da2d1357fdd14986/src/client/SyncedDataManager.ts#L138)
