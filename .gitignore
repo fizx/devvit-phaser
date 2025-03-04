@@ -1,5 +1,6 @@
 node_modules/
 dist/
+build/
 .DS_Store
 *.log
 .env
@@ -11,3 +12,5 @@ yarn-debug.log*
 yarn-error.log*
 .npm
 .yarn-integrity
+*.tgz
+.llm-reference-info/
