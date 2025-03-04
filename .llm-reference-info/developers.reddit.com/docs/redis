@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en" dir="ltr" class="docs-wrapper plugin-docs plugin-id-default docs-version-0.10 docs-doc-page docs-doc-id-redis" data-has-hydrated="false">
+<head>
+<meta charset="UTF-8">
+<meta name="generator" content="Docusaurus v3.1.1">
+<title data-rh="true">Redis | Reddit for Developers</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://developers.reddit.com/docs/redis"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="0.10"><meta data-rh="true" name="docusaurus_tag" content="docs-default-0.10"><meta data-rh="true" name="docsearch:version" content="0.10"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-0.10"><meta data-rh="true" property="og:title" content="Redis | Reddit for Developers"><meta data-rh="true" name="description" content="Add a database to store and retrieve data."><meta data-rh="true" property="og:description" content="Add a database to store and retrieve data."><link data-rh="true" rel="icon" href="/docs/img/orangered_icon_devvit_fill.svg"><link data-rh="true" rel="canonical" href="https://developers.reddit.com/docs/redis"><link data-rh="true" rel="alternate" href="https://developers.reddit.com/docs/redis" hreflang="en"><link data-rh="true" rel="alternate" href="https://developers.reddit.com/docs/redis" hreflang="x-default"><link rel="preconnect" href="https://www.google-analytics.com">
+<link rel="preconnect" href="https://www.googletagmanager.com">
+<script nonce="SHSLX4URmojAB0aUQX2ycA==" async src="https://www.googletagmanager.com/gtag/js?id=G-GWE79J8M6R"></script>
+<script nonce="SHSLX4URmojAB0aUQX2ycA==">function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-GWE79J8M6R",{anonymize_ip:!0})</script><link rel="stylesheet" href="/docs/assets/css/styles.e33424b0.css">
+<script nonce="SHSLX4URmojAB0aUQX2ycA==" src="/docs/assets/js/runtime~main.04494dd5.js" defer="defer"></script>
+<script nonce="SHSLX4URmojAB0aUQX2ycA==" src="/docs/assets/js/main.0a91c959.js" defer="defer"></script>
+</head>
+<body class="navigation-with-keyboard" data-theme="light">
+<script nonce="SHSLX4URmojAB0aUQX2ycA==">!function(){function t(t){document.documentElement.setAttribute("data-theme",t)}var e=function(){try{return new URLSearchParams(window.location.search).get("docusaurus-theme")}catch(t){}}()||function(){try{return localStorage.getItem("theme")}catch(t){}}();null!==e?t(e):window.matchMedia("(prefers-color-scheme: dark)").matches?t("dark"):(window.matchMedia("(prefers-color-scheme: light)").matches,t("light"))}(),function(){try{const c=new URLSearchParams(window.location.search).entries();for(var[t,e]of c)if(t.startsWith("docusaurus-data-")){var a=t.replace("docusaurus-data-","data-");document.documentElement.setAttribute(a,e)}}catch(t){}}()</script><div id="__docusaurus"><div role="region" aria-label="Skip to main content"><a class="skipToContent_oPtH" href="#__docusaurus_skipToContent_fallback">Skip to main content</a></div><nav aria-label="Main" class="navbar navbar--fixed-top"><div class="navbar__inner"><div class="navbar__items"><button aria-label="Toggle navigation bar" aria-expanded="false" class="navbar__toggle clean-btn" type="button"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M4 7h22M4 15h22M4 23h22"></path></svg></button><a href="https://developers.reddit.com/" target="_self" rel="noopener noreferrer" class="navbar__brand"><div class="navbar__logo"><img src="/docs/img/logo.svg" alt="Reddit for Developers" class="themedComponent_siVc themedComponent--light_hHel"><img src="/docs/img/logo.svg" alt="Reddit for Developers" class="themedComponent_siVc themedComponent--dark_yETr"></div></a><div class="navbar__item dropdown dropdown--hoverable"><a class="navbar__link" aria-haspopup="true" aria-expanded="false" role="button" href="/docs/">0.10</a><ul class="dropdown__menu"><li><a class="dropdown__link" href="/docs/next/">Next</a></li><li><a aria-current="page" class="dropdown__link dropdown__link--active" href="/docs/redis">0.10</a></li><li><a class="dropdown__link" href="/docs/0.9/">0.9</a></li></ul></div></div><div class="navbar__items navbar__items--right"><div class="toggle_ki11 colorModeToggle_Hewu"><button class="clean-btn toggleButton_MMFG toggleButtonDisabled_Uw7m" type="button" disabled="" title="Switch between dark and light mode (currently light mode)" aria-label="Switch between dark and light mode (currently light mode)" aria-live="polite"><svg viewBox="0 0 24 24" width="24" height="24" class="lightToggleIcon_lgto"><path fill="currentColor" d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1C11.45,19,11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.03-0.39-1.41,0 c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0s0.39-1.03,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.03-0.39-1.41,0c-0.39,0.39-0.39,1.03,0,1.41l1.06,1.06c0.39,0.39,1.03,0.39,1.41,0c0.39-0.39,0.39-1.03,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.03,0,1.41 s1.03,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.03,0-1.41c-0.39-0.39-1.03-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.03,0,1.41s1.03,0.39,1.41,0L7.05,18.36z"></path></svg><svg viewBox="0 0 24 24" width="24" height="24" class="darkToggleIcon_U96C"><path fill="currentColor" d="M9.37,5.51C9.19,6.15,9.1,6.82,9.1,7.5c0,4.08,3.32,7.4,7.4,7.4c0.68,0,1.35-0.09,1.99-0.27C17.45,17.19,14.93,19,12,19 c-3.86,0-7-3.14-7-7C5,9.07,6.81,6.55,9.37,5.51z M12,3c-4.97,0-9,4.03-9,9s4.03,9,9,9s9-4.03,9-9c0-0.46-0.04-0.92-0.1-1.36 c-0.98,1.37-2.58,2.26-4.4,2.26c-2.98,0-5.4-2.42-5.4-5.4c0-1.81,0.89-3.42,2.26-4.4C12.92,3.04,12.46,3,12,3L12,3z"></path></svg></button></div><div class="navbarSearchContainer_bzqh"><div class="dsla-search-wrapper"><div class="dsla-search-field" data-tags="default,docs-default-0.10,docs-firehose-current"></div></div></div></div></div><div role="presentation" class="navbar-sidebar__backdrop"></div></nav><div id="__docusaurus_skipToContent_fallback" class="main-wrapper mainWrapper_MB5r"><div class="docsWrapper__sE8"><button aria-label="Scroll back to top" class="clean-btn theme-back-to-top-button backToTopButton_iEvu" type="button"></button><div class="docRoot_DfVB"><aside class="theme-doc-sidebar-container docSidebarContainer_c7NB"><div class="sidebarViewport_KYo0"><div class="sidebar_CUen"><nav aria-label="Docs sidebar" class="menu thin-scrollbar menu_jmj1"><ul class="theme-doc-sidebar-menu menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/">Introduction</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/quickstart">Quickstart</a></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/docs/dev_guide">Getting started</a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist" aria-expanded="false" href="/docs/examples/overview">Examples</a><button aria-label="Expand sidebar category &#x27;Examples&#x27;" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret menu__link--active" aria-expanded="true" href="/docs/install_settings">Capabilities</a></div><ul style="display:block;overflow:visible;height:auto" class="menu__list"><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/install_settings">App configurations</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/adding_links">Adding links</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/cache">Caching helper</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/forms">Forms</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/media_uploads">Image uploads</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/menu_actions">Menu actions</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/api/redditapi/classes/RedditAPIClient.RedditAPIClient">Reddit API Client</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link menu__link--active" aria-current="page" tabindex="0" href="/docs/redis">Redis</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/realtime">Realtime</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/scheduler">Scheduler</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/secrets_storage">Secrets storage</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/event_triggers">Triggers</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-2 menu__list-item"><a class="menu__link" tabindex="0" href="/docs/http_fetch">HTTP fetch</a></li></ul></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/docs/custom_posts">Custom posts</a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist" aria-expanded="false" href="/docs/blocks/overview">Blocks</a><button aria-label="Expand sidebar category &#x27;Blocks&#x27;" type="button" class="clean-btn menu__caret"></button></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/docs/playground">Developer tools</a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/docs/api/public-api/classes/Devvit-1">Devvit library</a></div></li><li class="theme-doc-sidebar-item-category theme-doc-sidebar-item-category-level-1 menu__list-item menu__list-item--collapsed"><div class="menu__list-item-collapsible"><a class="menu__link menu__link--sublist menu__link--sublist-caret" aria-expanded="false" href="/docs/mod_resources">Resources</a></div></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/guidelines">Guidelines</a></li><li class="theme-doc-sidebar-item-link theme-doc-sidebar-item-link-level-1 menu__list-item"><a class="menu__link" href="/docs/changelog">Changelog</a></li></ul></nav></div></div></aside><main class="docMainContainer_a9sJ"><div class="container padding-top--md padding-bottom--lg"><div class="row"><div class="col docItemCol_Qr34"><div class="docItemContainer_tjFy"><article><nav class="theme-doc-breadcrumbs breadcrumbsContainer_T5ub" aria-label="Breadcrumbs"><ul class="breadcrumbs" itemscope="" itemtype="https://schema.org/BreadcrumbList"><li class="breadcrumbs__item"><a aria-label="Home page" class="breadcrumbs__link" href="/docs/"><svg viewBox="0 0 24 24" class="breadcrumbHomeIcon_sfvy"><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z" fill="currentColor"></path></svg></a></li><li class="breadcrumbs__item"><span class="breadcrumbs__link">Capabilities</span><meta itemprop="position" content="1"></li><li itemscope="" itemprop="itemListElement" itemtype="https://schema.org/ListItem" class="breadcrumbs__item breadcrumbs__item--active"><span class="breadcrumbs__link" itemprop="name">Redis</span><meta itemprop="position" content="2"></li></ul></nav><span class="theme-doc-version-badge badge badge--secondary">Version: 0.10</span><div class="tocCollapsible_wXna theme-doc-toc-mobile tocMobile_Ojys"><button type="button" class="clean-btn tocCollapsibleButton_iI2p">On this page</button></div><div class="theme-doc-markdown markdown"><h1>Redis</h1>
+<p>Add a database to store and retrieve data.</p>
+<p>The Redis plugin is designed to be fast, scalable and secure, and it supports a subset of the full Redis API, including:</p>
+<ul>
+<li><a href="#transactions">Transactions</a> for things like counting votes atomically in polls</li>
+<li><a href="#strings">String operations</a> for batch writing or incrementing numbers</li>
+<li><a href="#sorted-set">Sorted sets</a> for creating leaderboards</li>
+<li><a href="#hash">Hashes</a> for managing a collection of key-value pairs</li>
+</ul>
+<p>Each app version installed on a subreddit is namespaced, which means Redis data is siloed from other subreddits. Keep in mind that there won’t be a single source of truth for all installations of your app, since each app installation can only access the data that it has stored in the Redis database.</p>
+<div class="theme-admonition theme-admonition-note admonition_WCGJ alert alert--secondary"><div class="admonitionHeading_GCBg"><span class="admonitionIcon_L39b"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>note</div><div class="admonitionContent_pbrs"><p>Redis is a more robust replacement for the key value store. All apps using the key value store should <a href="/docs/migrate_kv_to_redis">migrate to Redis</a>.</p></div></div>
+<h2 class="anchor anchorWithStickyNavbar_JmGV" id="limits-and-quotas">Limits and Quotas<a href="#limits-and-quotas" class="hash-link" aria-label="Direct link to Limits and Quotas" title="Direct link to Limits and Quotas">​</a></h2>
+<ul>
+<li>Max commands per second: 1000</li>
+<li>Max request size: 5 MB</li>
+<li>Max storage: 500 MB</li>
+</ul>
+<p>All limits are applied at a per-installation granularity.</p>
+<h2 class="anchor anchorWithStickyNavbar_JmGV" id="add-redis-to-your-app">Add Redis to your app<a href="#add-redis-to-your-app" class="hash-link" aria-label="Direct link to Add Redis to your app" title="Direct link to Add Redis to your app">​</a></h2>
+<p>When creating an app, enable the plugin in <code>Devvit.configure</code>.</p>
+<div class="language-tsx codeBlockContainer_mQmQ theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_D5yF"><pre tabindex="0" class="prism-code language-tsx codeBlock_RMoD thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_AclH"><span class="token-line" style="color:#393A34"><span class="token maybe-class-name">Devvit</span><span class="token punctuation" style="color:#393A34">.</span><span class="token method function property-access" style="color:#d73a49">configure</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  redis</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token boolean" style="color:#36acaa">true</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre><div class="buttonGroup_aaMX"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_z5j7" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_FoOz"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_L0B6"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<div class="theme-admonition theme-admonition-note admonition_WCGJ alert alert--secondary"><div class="admonitionHeading_GCBg"><span class="admonitionIcon_L39b"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>note</div><div class="admonitionContent_pbrs"><p>For existing apps, learn how to <a href="/docs/migrate_kv_to_redis">migrate the KV store to Redis</a>.</p></div></div>
+<h2 class="anchor anchorWithStickyNavbar_JmGV" id="examples">Examples<a href="#examples" class="hash-link" aria-label="Direct link to Examples" title="Direct link to Examples">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="menu-items">Menu items<a href="#menu-items" class="hash-link" aria-label="Direct link to Menu items" title="Direct link to Menu items">​</a></h3>
+<div class="language-tsx codeBlockContainer_mQmQ theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_D5yF"><pre tabindex="0" class="prism-code language-tsx codeBlock_RMoD thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_AclH"><span class="token-line" style="color:#393A34"><span class="token maybe-class-name">Devvit</span><span class="token punctuation" style="color:#393A34">.</span><span class="token method function property-access" style="color:#d73a49">addMenuItem</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token dom variable" style="color:#36acaa">location</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;subreddit&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  label</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;Test Redis&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token function-variable function" style="color:#d73a49">onPress</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">async</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">event</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> redis </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token arrow operator" style="color:#393A34">=&gt;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">const</span><span class="token plain"> key </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;hello&#x27;</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">await</span><span class="token plain"> redis</span><span class="token punctuation" style="color:#393A34">.</span><span class="token method function property-access" style="color:#d73a49">set</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">key</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;world&#x27;</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token keyword" style="color:#00009f">const</span><span class="token plain"> value </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">await</span><span class="token plain"> redis</span><span class="token punctuation" style="color:#393A34">.</span><span class="token method function property-access" style="color:#d73a49">get</span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain">key</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token console class-name">console</span><span class="token punctuation" style="color:#393A34">.</span><span class="token method function property-access" style="color:#d73a49">log</span><span class="token punctuation" style="color:#393A34">(</span><span class="token template-string template-punctuation string" style="color:#e3116c">`</span><span class="token template-string interpolation interpolation-punctuation punctuation" style="color:#393A34">${</span><span class="token template-string interpolation">key</span><span class="token template-string interpolation interpolation-punctuation punctuation" style="color:#393A34">}</span><span class="token template-string string" style="color:#e3116c">: </span><span class="token template-string interpolation interpolation-punctuation punctuation" style="color:#393A34">${</span><span class="token template-string interpolation">value</span><span class="token template-string interpolation interpolation-punctuation punctuation" style="color:#393A34">}</span><span class="token template-string template-punctuation string" style="color:#e3116c">`</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre><div class="buttonGroup_aaMX"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_z5j7" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_FoOz"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_L0B6"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="custom-posts">Custom Posts<a href="#custom-posts" class="hash-link" aria-label="Direct link to Custom Posts" title="Direct link to Custom Posts">​</a></h3>
+<p>You can follow this template to create a custom post containing an interactive progress bar backed by Redis.</p>
+<div class="language-tsx codeBlockContainer_mQmQ theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_D5yF"><pre tabindex="0" class="prism-code language-tsx codeBlock_RMoD thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_AclH"><span class="token-line" style="color:#393A34"><span class="token comment" style="color:#999988;font-style:italic">// start from a template</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">devvit </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">replace-with-your-app-name</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain-text"> --template=redis</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain-text">devvit playtest </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag" style="color:#00009f">your-test-subreddit</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><br></span></code></pre><div class="buttonGroup_aaMX"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_z5j7" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_FoOz"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_L0B6"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<h2 class="anchor anchorWithStickyNavbar_JmGV" id="supported-redis-commands">Supported Redis commands<a href="#supported-redis-commands" class="hash-link" aria-label="Direct link to Supported Redis commands" title="Direct link to Supported Redis commands">​</a></h2>
+<div class="theme-admonition theme-admonition-note admonition_WCGJ alert alert--secondary"><div class="admonitionHeading_GCBg"><span class="admonitionIcon_L39b"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M6.3 5.69a.942.942 0 0 1-.28-.7c0-.28.09-.52.28-.7.19-.18.42-.28.7-.28.28 0 .52.09.7.28.18.19.28.42.28.7 0 .28-.09.52-.28.7a1 1 0 0 1-.7.3c-.28 0-.52-.11-.7-.3zM8 7.99c-.02-.25-.11-.48-.31-.69-.2-.19-.42-.3-.69-.31H6c-.27.02-.48.13-.69.31-.2.2-.3.44-.31.69h1v3c.02.27.11.5.31.69.2.2.42.31.69.31h1c.27 0 .48-.11.69-.31.2-.19.3-.42.31-.69H8V7.98v.01zM7 2.3c-3.14 0-5.7 2.54-5.7 5.68 0 3.14 2.56 5.7 5.7 5.7s5.7-2.55 5.7-5.7c0-3.15-2.56-5.69-5.7-5.69v.01zM7 .98c3.86 0 7 3.14 7 7s-3.14 7-7 7-7-3.12-7-7 3.14-7 7-7z"></path></svg></span>note</div><div class="admonitionContent_pbrs"><p>Not all Redis features are supported. If you would like to request a specific Redis feature, please reach out to our team <a href="https://www.reddit.com/message/compose/?to=%2Fr%2FDevvit" target="_blank" rel="noopener noreferrer">via modmail</a> or Discord.</p></div></div>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="simple-readwrite">Simple read/write<a href="#simple-readwrite" class="hash-link" aria-label="Direct link to Simple read/write" title="Direct link to Simple read/write">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Command</strong></th><th><strong>Action</strong></th></tr></thead><tbody><tr><td><a href="https://redis.io/commands/Get" target="_blank" rel="noopener noreferrer">get</a></td><td>Gets the value of key.</td></tr><tr><td><a href="https://redis.io/commands/Set" target="_blank" rel="noopener noreferrer">set</a></td><td>Sets key to hold a string value.</td></tr><tr><td><a href="https://redis.io/commands/Del" target="_blank" rel="noopener noreferrer">del</a></td><td>Removes the specified keys.</td></tr><tr><td><a href="https://redis.io/commands/Type" target="_blank" rel="noopener noreferrer">type</a></td><td>Returns the string representation of the type of value stored at key.</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="batch-readwrite">Batch read/write<a href="#batch-readwrite" class="hash-link" aria-label="Direct link to Batch read/write" title="Direct link to Batch read/write">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Command</strong></th><th><strong>Action</strong></th></tr></thead><tbody><tr><td><a href="https://redis.io/commands/MGet" target="_blank" rel="noopener noreferrer">mget</a></td><td>Returns the values of all specified keys.</td></tr><tr><td><a href="https://redis.io/commands/MSet" target="_blank" rel="noopener noreferrer">mset</a></td><td>Sets the given keys to their respective values.</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="strings">Strings<a href="#strings" class="hash-link" aria-label="Direct link to Strings" title="Direct link to Strings">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Command</strong></th><th><strong>Action</strong></th></tr></thead><tbody><tr><td><a href="https://redis.io/commands/GetRange" target="_blank" rel="noopener noreferrer">getRange</a></td><td>Returns the substring of the string value stored at key, determined by the offsets start and end (both are inclusive).</td></tr><tr><td><a href="https://redis.io/commands/SetRange" target="_blank" rel="noopener noreferrer">setRange</a></td><td>Overwrites part of the string stored at key, starting at the specified offset, for the entire length of value.</td></tr><tr><td><a href="https://redis.io/commands/Strlen" target="_blank" rel="noopener noreferrer">strlen</a></td><td>Returns the length of the string value stored at key.</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="hash">Hash<a href="#hash" class="hash-link" aria-label="Direct link to Hash" title="Direct link to Hash">​</a></h3>
+<p>Redis hashes can store upto ~ 4.2 billion key-value pairs. We recommend hash usage for managing collections of key/value pairs
+whenever possible and iterating over it using a combination of <code>hscan</code>, <code>hkeys</code> and <code>hgetall</code> - this will also allow you easily migrate away from using <code>kvStore.list</code> method. Please see the <a href="/docs/migrate_kv_to_redis">migration guide</a> for more details.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Command</strong></th><th><strong>Action</strong></th></tr></thead><tbody><tr><td><a href="https://redis.io/commands/hget" target="_blank" rel="noopener noreferrer">hget</a></td><td>Returns the value associated with field in the hash stored at key.</td></tr><tr><td><a href="https://redis.io/commands/hset/" target="_blank" rel="noopener noreferrer">hset</a></td><td>Sets the specified fields to their respective values in the hash stored at key.</td></tr><tr><td><a href="https://redis.io/commands/hdel/" target="_blank" rel="noopener noreferrer">hdel</a></td><td>Removes the specified fields from the hash stored at key.</td></tr><tr><td><a href="https://redis.io/commands/hgetall/" target="_blank" rel="noopener noreferrer">hgetall</a></td><td>Returns a map of fields and their values stored in the hash</td></tr><tr><td><a href="https://redis.io/commands/hkeys/" target="_blank" rel="noopener noreferrer">hkeys</a></td><td>Returns all field names in the hash stored at key.</td></tr><tr><td><a href="https://redis.io/commands/hscan/" target="_blank" rel="noopener noreferrer">hscan</a></td><td>Iterates fields of Hash types and their associated values.</td></tr><tr><td><a href="https://redis.io/commands/hincrby/" target="_blank" rel="noopener noreferrer">hincrby</a></td><td>Increments the score of member in the sorted set stored at key by value</td></tr><tr><td><a href="https://redis.io/commands/hlen/" target="_blank" rel="noopener noreferrer">hlen</a></td><td>Returns the number of fields contained in the hash stored at key.</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="numbers">Numbers<a href="#numbers" class="hash-link" aria-label="Direct link to Numbers" title="Direct link to Numbers">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Command</strong></th><th><strong>Action</strong></th></tr></thead><tbody><tr><td><a href="https://redis.io/commands/incrby" target="_blank" rel="noopener noreferrer">incrBy</a></td><td>Increments the number stored at key by increment.</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="key-expiration">Key expiration<a href="#key-expiration" class="hash-link" aria-label="Direct link to Key expiration" title="Direct link to Key expiration">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Command</strong></th><th><strong>Action</strong></th></tr></thead><tbody><tr><td><a href="https://redis.io/commands/expire/" target="_blank" rel="noopener noreferrer">expire</a></td><td>Sets a timeout on key.</td></tr><tr><td><a href="https://redis.io/commands/expiretime/" target="_blank" rel="noopener noreferrer">expireTime</a></td><td>Returns the absolute Unix timestamp (since January 1, 1970) in seconds at which the given key will expire.</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="transactions"><a href="https://redis.io/topics/transactions" target="_blank" rel="noopener noreferrer">Transactions</a><a href="#transactions" class="hash-link" aria-label="Direct link to transactions" title="Direct link to transactions">​</a></h3>
+<p>Redis transactions allow execution of a group of commands in a single isolated step. For example, let’s say you are implementing voting action in a polls app. These three steps need to happen together:</p>
+<ul>
+<li>Store the selected option for the user</li>
+<li>Increment the count for selected option</li>
+<li>Add the user to voted user list</li>
+</ul>
+<p>We can sequence all of the above steps in a single transaction using <code>multi</code> and <code>exec</code> to ensure that either all of the steps happen together or none at all.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Command</strong></th><th><strong>Action</strong></th></tr></thead><tbody><tr><td><a href="https://redis.io/commands/multi/" target="_blank" rel="noopener noreferrer">multi</a></td><td>Marks the start of a transaction block.</td></tr><tr><td><a href="https://redis.io/commands/exec/" target="_blank" rel="noopener noreferrer">exec</a></td><td>Executes all previously queued commands in a transaction and restores the connection state to normal.</td></tr><tr><td><a href="https://redis.io/commands/discard/" target="_blank" rel="noopener noreferrer">discard</a></td><td>Flushes all previously queued commands in a transaction and restores the connection state to normal.</td></tr><tr><td><a href="https://redis.io/commands/watch/" target="_blank" rel="noopener noreferrer">watch</a></td><td>Marks the given keys to be watched for conditional execution of a transaction.</td></tr><tr><td><a href="https://redis.io/commands/unwatch/" target="_blank" rel="noopener noreferrer">unwatch</a></td><td>Flushes all the previously watched keys for a transaction.</td></tr></tbody></table>
+<h3 class="anchor anchorWithStickyNavbar_JmGV" id="sorted-set">Sorted set<a href="#sorted-set" class="hash-link" aria-label="Direct link to Sorted set" title="Direct link to Sorted set">​</a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>Command</strong></th><th><strong>Action</strong></th></tr></thead><tbody><tr><td><a href="https://redis.io/commands/zadd/" target="_blank" rel="noopener noreferrer">zAdd</a></td><td>Adds all the specified members with the specified scores to the sorted set stored at key.</td></tr><tr><td><a href="https://redis.io/commands/zcard" target="_blank" rel="noopener noreferrer">zCard</a></td><td>Returns the sorted set cardinality (number of elements) of the sorted set stored at key.</td></tr><tr><td><a href="https://redis.io/commands/zrange/" target="_blank" rel="noopener noreferrer">zRange</a></td><td>Returns the specified range of elements in the sorted set stored at key.</td></tr><tr><td><a href="https://redis.io/commands/zrem/" target="_blank" rel="noopener noreferrer">zRem</a></td><td>Removes the specified members from the sorted set stored at key.</td></tr><tr><td><a href="https://redis.io/commands/zscore/" target="_blank" rel="noopener noreferrer">zScore</a></td><td>Returns the score of member in the sorted set at key.</td></tr><tr><td><a href="https://redis.io/commands/zrank/" target="_blank" rel="noopener noreferrer">zRank</a></td><td>Returns the rank of member in the sorted set stored at key</td></tr><tr><td><a href="https://redis.io/commands/zincrby/" target="_blank" rel="noopener noreferrer">zIncrBy</a></td><td>Increments the score of member in the sorted set stored at key by value</td></tr><tr><td><a href="https://redis.io/commands/zscan/" target="_blank" rel="noopener noreferrer">zScan</a></td><td>Iterates elements of sorted set types and their associated scores.</td></tr><tr><td><a href="https://redis.io/commands/zremrangebylex/" target="_blank" rel="noopener noreferrer">zRemByRangeByLex</a></td><td>When all elements in a sorted set are inserted with the same score, this command removes the elements at key between the lexicographical range specified by min and max.</td></tr><tr><td><a href="https://redis.io/commands/zremrangebyrank/" target="_blank" rel="noopener noreferrer">zRemByRangeByRank</a></td><td>Removes all elements in the sorted set stored at key with rank between start and stop.</td></tr><tr><td><a href="https://redis.io/commands/zremrangebyscore/" target="_blank" rel="noopener noreferrer">zRemByRangeByScore</a></td><td>Removes all elements in the sorted set stored at key with a score between min and max (inclusive).</td></tr></tbody></table></div></article><nav class="pagination-nav docusaurus-mt-lg" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/docs/api/redditapi/classes/RedditAPIClient.RedditAPIClient"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">Class: RedditAPIClient</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/docs/realtime"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">Realtime</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_XG6w thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#limits-and-quotas" class="table-of-contents__link toc-highlight">Limits and Quotas</a></li><li><a href="#add-redis-to-your-app" class="table-of-contents__link toc-highlight">Add Redis to your app</a></li><li><a href="#examples" class="table-of-contents__link toc-highlight">Examples</a><ul><li><a href="#menu-items" class="table-of-contents__link toc-highlight">Menu items</a></li><li><a href="#custom-posts" class="table-of-contents__link toc-highlight">Custom Posts</a></li></ul></li><li><a href="#supported-redis-commands" class="table-of-contents__link toc-highlight">Supported Redis commands</a><ul><li><a href="#simple-readwrite" class="table-of-contents__link toc-highlight">Simple read/write</a></li><li><a href="#batch-readwrite" class="table-of-contents__link toc-highlight">Batch read/write</a></li><li><a href="#strings" class="table-of-contents__link toc-highlight">Strings</a></li><li><a href="#hash" class="table-of-contents__link toc-highlight">Hash</a></li><li><a href="#numbers" class="table-of-contents__link toc-highlight">Numbers</a></li><li><a href="#key-expiration" class="table-of-contents__link toc-highlight">Key expiration</a></li><li><a href="#transactions" class="table-of-contents__link toc-highlight">Transactions</a></li><li><a href="#sorted-set" class="table-of-contents__link toc-highlight">Sorted set</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="col footer__col"><div class="footer__title">More Resources</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://www.reddit.com/r/devvit" target="_blank" rel="noopener noreferrer" class="footer__link-item">Go to r/Devvit<svg width="13.5" height="13.5" aria-hidden="true" viewBox="0 0 24 24" class="iconExternalLink_nPrP"><path fill="currentColor" d="M21 13v10h-21v-19h12v2h-10v15h17v-8h2zm3-12h-10.988l4.035 4-6.977 7.07 2.828 2.828 6.977-7.07 4.125 4.172v-11z"></path></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Reddit, Inc. © 2024. Built with Docusaurus.</div></div></div></footer></div>
+</body>
+</html>

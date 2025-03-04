@@ -1,0 +1,30 @@
+# Inspired by reddit-wide robots.txt for search engines
+
+# 80legs
+User-agent: 008
+Disallow: /
+
+# 80legs' new crawler
+User-agent: voltron
+Disallow: /
+
+User-Agent: bender
+Disallow: /my_shiny_metal_ass
+
+User-Agent: Gort
+Disallow: /earth
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: PiplBot
+Disallow: /
+
+User-Agent: *
+# landing page
+Allow: /$
+Allow: /apps
+Allow: /docs
+Allow: /get-started
+Allow: /play
+Disallow: /
