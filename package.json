@@ -10,7 +10,8 @@
     "docs": "typedoc",
     "docs:serve": "npx serve docs",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "deploy-docs": "npm run build && npm run docs && gh-pages -d docs"
   },
   "keywords": [
     "devvit",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@devvit/public-api": "^0.11.7",
     "@types/uuid": "^10.0.0",
+    "gh-pages": "^6.3.0",
     "typedoc": "^0.25.0",
     "typedoc-plugin-markdown": "^3.16.0",
     "typescript": "^5.0.0",

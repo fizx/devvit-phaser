@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-const router: { [id: string]: WeakRef<SyncedDataManager> } = {};
+const router: { [id: string]: SyncedDataManager } = {};
 window.me = new Phaser.Data.DataManager(new Phaser.Events.EventEmitter());
 
 // Set up global message handler
@@ -36,8 +36,7 @@ window.addEventListener("message", (event) => {
         | undefined);
     if (!mutation || !mutation?.dataManagerId?.id) return;
 
-    const targetRef = router[mutation.dataManagerId.id];
-    const target = targetRef?.deref();
+    const target = router[mutation.dataManagerId.id];
     if (target) {
       console.log("applying mutation", mutation);
       target.applyMutation(mutation, event.data.data.message.ready);
@@ -60,7 +59,7 @@ export class SyncedDataManager extends Phaser.Data.DataManager {
   ) {
     super(parent, emitter);
     this.id = typeof id === "string" ? { id } : id;
-    router[this.id.id] = new WeakRef(this);
+    router[this.id.id] = this;
     this.postSubscriptions([this.id]);
   }
 
@@ -116,7 +115,7 @@ export class SyncedDataManager extends Phaser.Data.DataManager {
     return this;
   }
 
-  inc(key: string, value: number = 1): this {
+  override inc(key: string, value: number = 1): this {
     const current = (super.get(key) as number) || 0;
     super.set(key, current + value);
     this.postMutation({

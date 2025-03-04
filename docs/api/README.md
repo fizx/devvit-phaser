@@ -1,3 +1,5 @@
+devvit-phaser / [Exports](modules.md)
+
 # Devvit-Phaser 🎮
 
 [![npm version](https://img.shields.io/npm/v/devvit-phaser.svg)](https://www.npmjs.com/package/devvit-phaser)

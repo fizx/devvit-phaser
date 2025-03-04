@@ -358,6 +358,9 @@ export class BasicGameServer {
               "Unable to post anonymously unless you're logged in."
             );
           let sr = await context.reddit.getSubredditById(context.subredditId);
+          if (!sr) {
+            return context.ui.showToast("Unable to get subreddit information.");
+          }
           let post = await context.reddit.submitPost({
             subredditName: sr.name,
             title: values["title"],
