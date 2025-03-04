@@ -6,7 +6,10 @@ export class DataManagerServer {
   constructor(private parent: PhaserGameServer, public id: DataManagerId) {}
 
   get subscriptionId() {
-    return this.parent.toSubscriptionId(this.id);
+    // Use a more public-facing method to get the channel
+    return this.id.isGlobal
+      ? this.id.id
+      : `${this.parent.postId}_${this.id.id}`;
   }
 
   private createMutation(
@@ -22,7 +25,7 @@ export class DataManagerServer {
     };
   }
 
-  async processMutation(mutation: DataManagerMutation): Promise<void> {
+  private async processMutation(mutation: DataManagerMutation): Promise<void> {
     const promises: Promise<any>[] = [];
     console.log("processing mutation", mutation);
     // Process updates

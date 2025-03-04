@@ -20,7 +20,7 @@ export class PhaserGameServer extends BasicGameServer {
     super(gameName);
   }
 
-  toSubscriptionId(dataManagerId: DataManagerId) {
+  protected toSubscriptionId(dataManagerId: DataManagerId) {
     return dataManagerId.isGlobal
       ? dataManagerId.id
       : `${this.postId}_${dataManagerId.id}`;
@@ -60,7 +60,7 @@ export class PhaserGameServer extends BasicGameServer {
       add: [dataManager.id],
     });
   }
-  async unsubscribePlayerToDataManager(dataManager: DataManagerServer) {
+  async unsubscribePlayerFromDataManager(dataManager: DataManagerServer) {
     await this.processDataManagerSubscription({
       remove: [dataManager.id],
     });
@@ -68,8 +68,28 @@ export class PhaserGameServer extends BasicGameServer {
 
   async processDataManagerMutation(mutation: DataManagerMutation) {
     await this.onDataManagerMutate(mutation);
+    
+    // Instead of calling processMutation directly, use the public methods
     const server = new DataManagerServer(this, mutation.dataManagerId);
-    await server.processMutation(mutation);
+    
+    // Handle updates
+    if (mutation.updates && Object.keys(mutation.updates).length > 0) {
+      await server.setAll(mutation.updates);
+    }
+    
+    // Handle deletes
+    if (mutation.deletes && mutation.deletes.length > 0) {
+      for (const key of mutation.deletes) {
+        await server.remove(key);
+      }
+    }
+    
+    // Handle increments
+    if (mutation.increments && Object.keys(mutation.increments).length > 0) {
+      for (const [key, value] of Object.entries(mutation.increments)) {
+        await server.inc(key, value);
+      }
+    }
   }
 
   async processDataManagerSubscription(subscriptions: DataManagerSubscription) {

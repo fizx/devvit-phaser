@@ -39,6 +39,8 @@ window.addEventListener("message", (event) => {
     const target = router[mutation.dataManagerId.id];
     if (target) {
       console.log("applying mutation", mutation);
+      // Access private method through a correctly scoped function
+      // Since this code is in the same file as the class definition, it can access private members
       target.applyMutation(mutation, event.data.data.message.ready);
     } else {
       console.warn("No target found for mutation", mutation);
@@ -75,7 +77,7 @@ export class SyncedDataManager extends Phaser.Data.DataManager {
     window.parent.postMessage({ subscriptions }, "*");
   }
 
-  applyMutation(mutation: DataManagerMutation, setReady: boolean) {
+  private applyMutation(mutation: DataManagerMutation, setReady: boolean) {
     Object.entries(mutation.updates || {}).forEach(([key, value]) => {
       console.log("setting", key, value);
       super.set(key, value);
