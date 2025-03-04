@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
-    "docs": "typedoc",
+    "docs": "typedoc && cp README.md docs/ && echo '<!DOCTYPE html><html><head><meta http-equiv=\"refresh\" content=\"0; url=api/index.html\"></head><body>Redirecting to <a href=\"api/index.html\">documentation</a>...</body></html>' > docs/index.html",
     "docs:serve": "npx serve docs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -34,7 +34,6 @@
     "@types/uuid": "^10.0.0",
     "gh-pages": "^6.3.0",
     "typedoc": "^0.25.0",
-    "typedoc-plugin-markdown": "^3.16.0",
     "typescript": "^5.0.0",
     "vitest": "^3.0.7"
   },
