@@ -32,7 +32,7 @@
     "deploy-docs": "npm run build && npm run docs && gh-pages -d docs",
     "build:mcp": "cd mcp && npm install && npm run build",
     "start:mcp": "cd mcp && npm start",
-    "postinstall": "cd mcp && npm install --no-package-lock"
+    "postinstall": "cd mcp && npm ci --production --no-package-lock || cd mcp && npm install --production --no-package-lock"
   },
   "keywords": [
     "devvit",

@@ -216,6 +216,10 @@ You can run the MCP server in two ways:
 # Install devvit-phaser globally
 npm install -g devvit-phaser
 
+# When upgrading, uninstall first to avoid conflicts
+# npm uninstall -g devvit-phaser
+# npm install -g devvit-phaser
+
 # Run the MCP server from anywhere
 devvit-phaser-mcp
 ```
