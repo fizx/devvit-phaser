@@ -1,10 +1,10 @@
-import { BasicGameSrv } from "../core/BasicGameSrv";
-import { DataManagerSrv } from "./DataManagerSrv";
+import { BasicGameSrv } from "../core/BasicGameSrv.js";
+import { DataManagerSrv } from "./DataManagerSrv.js";
 import {
   DataManagerId,
   DataManagerMutation,
   DataManagerSubscription,
-} from "../types";
+} from "../types.js";
 import { JSONValue } from "@devvit/public-api";
 
 export function hi() {

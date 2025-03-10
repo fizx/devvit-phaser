@@ -7,18 +7,18 @@
  */
 
 // Export all types
-export * from './types';
-export * from './core/types';
+export * from './types.js';
+export * from './core/types.js';
 
 // Export core components
-export { BasicGameSrv } from './core/BasicGameSrv';
+export { BasicGameSrv } from './core/BasicGameSrv.js';
 
 // Export client components
-export { SyncedDataManager } from './client/SyncedDataManager';
+export { SyncedDataManager } from './client/SyncedDataManager.js';
 
 // Export server components
-export { PhaserGameSrv } from './srv/PhaserGameSrv';
-export { DataManagerSrv } from './srv/DataManagerSrv';
+export { PhaserGameSrv } from './srv/PhaserGameSrv.js';
+export { DataManagerSrv } from './srv/DataManagerSrv.js';
 
 // Log warning in development (but not in production to avoid console spam)
 if (process.env.NODE_ENV !== 'production') {

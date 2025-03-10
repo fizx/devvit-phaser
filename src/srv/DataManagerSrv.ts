@@ -1,6 +1,6 @@
-import { DataManagerId, DataManagerMutation } from "../types";
+import { DataManagerId, DataManagerMutation } from "../types.js";
 import { JSONValue } from "@devvit/public-api";
-import { PhaserGameSrv } from "./PhaserGameSrv";
+import { PhaserGameSrv } from "./PhaserGameSrv.js";
 
 export class DataManagerSrv {
   constructor(private parent: PhaserGameSrv, public id: DataManagerId) {}

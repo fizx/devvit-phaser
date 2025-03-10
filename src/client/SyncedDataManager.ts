@@ -3,7 +3,7 @@ import {
   DataManagerId,
   DataManagerMutation,
   DataManagerSubscription,
-} from "../types";
+} from "../types.js";
 import { JSONValue } from "@devvit/public-api";
 
 declare global {

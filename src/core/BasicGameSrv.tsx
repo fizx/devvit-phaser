@@ -14,7 +14,7 @@ import {
   useState,
 } from "@devvit/public-api";
 
-import { BroadcastMessage, PostInfo, TimerEvent, UserInfo } from "./types";
+import { BroadcastMessage, PostInfo, TimerEvent, UserInfo } from "./types.js";
 
 /**
  * This is a basic game server that can be used to create a simple game. Many of the methods are overridable so you can
