@@ -6,6 +6,8 @@
 
 A library to integrate Phaser.js with Reddit's Devvit platform for building interactive multiplayer games. This library provides a simple, yet powerful framework for creating multiplayer games with synchronized state between players.
 
+This package also includes an MCP (Model Context Protocol) server for testing Devvit-Phaser games. See the [MCP Server](#mcp-server) section for more details.
+
 ## Installation
 
 ```bash
@@ -29,11 +31,11 @@ Devvit-Phaser is built around a few core concepts:
 ### Creating a Game Server
 
 ```typescript
-import { PhaserGameServer } from 'devvit-phaser';
+import { PhaserGameSrv } from 'devvit-phaser/srv';
 import { Devvit } from '@devvit/public-api';
 
 // Create a game server with your game name
-const gameServer = new PhaserGameServer('Asteroid Blaster');
+const gameServer = new PhaserGameSrv('Asteroid Blaster');
 
 // Set up custom handlers if needed
 gameServer.onDataManagerSubscribe = async (subscriptions) => {
@@ -51,7 +53,7 @@ gameServer.onPlayerJoined = async () => {
   await super.onPlayerJoined(); // Call the parent method to handle basic setup
   
   // Create a player-specific data manager
-  const playerData = new DataManagerServer(this, { id: `player_${this.userId}` });
+  const playerData = new DataManagerSrv(this, { id: `player_${this.userId}` });
   
   // Initialize with default values
   await playerData.setAll({
@@ -71,7 +73,7 @@ gameServer.build();
 ### Using Synchronized Data in Phaser
 
 ```typescript
-import { SyncedDataManager } from 'devvit-phaser';
+import { SyncedDataManager } from 'devvit-phaser/client';
 import Phaser from 'phaser';
 
 export class MainScene extends Phaser.Scene {
@@ -152,7 +154,7 @@ gameServer.setInterval('spawn_asteroid', 1000);
 // Handle timer events
 gameServer.onTimerEvent = async (event) => {
   if (event.name === 'spawn_asteroid') {
-    const asteroidData = new DataManagerServer(this, { id: 'asteroids' });
+    const asteroidData = new DataManagerSrv(this, { id: 'asteroids' });
     const asteroids = await asteroidData.get('list') || [];
     
     asteroids.push({
@@ -176,7 +178,7 @@ gameServer.onPlayerJoined = async () => {
   await super.onPlayerJoined();
   
   // Get the list of active players
-  const playersData = new DataManagerServer(this, { id: 'players' });
+  const playersData = new DataManagerSrv(this, { id: 'players' });
   const players = await playersData.get('active') || [];
   
   // Add the new player
@@ -193,6 +195,38 @@ gameServer.onPlayerJoined = async () => {
   });
 };
 ```
+
+## MCP Server
+
+Devvit-Phaser includes an MCP (Model Context Protocol) server that facilitates testing of Devvit-Phaser games. This server allows AI assistants and other MCP clients to control browser testing and manage Devvit playtest environments.
+
+### Features
+
+- 🌐 **Browser Testing**: Launch, navigate, and interact with web browsers
+- 🚀 **Devvit Playtest**: Start, monitor, and manage Devvit playtest environments
+- 📊 **Log Access**: Stream and query Devvit playtest logs
+
+### Running the MCP Server
+
+```bash
+# Install dependencies
+npm run build:mcp
+
+# Start the server
+npm run start:mcp
+```
+
+The server communicates via stdio, making it compatible with any MCP client.
+
+### Resources and Tools
+
+The MCP server provides:
+
+- Resources for checking browser and playtest status
+- Tools for browser automation (launch, navigate, interact)
+- Tools for managing Devvit playtest (start, restart, stop)
+
+For more details, see the [MCP README](./mcp/README.md).
 
 ## License
 
