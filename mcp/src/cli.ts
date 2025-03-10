@@ -27,5 +27,12 @@ program.parse(process.argv);
 
 // Default to the start command if no command is specified
 if (!process.argv.slice(2).length) {
-  program.commands.find(c => c.name() === 'start')?.action();
+  // Execute the start command directly instead of trying to call the action
+  console.log(chalk.blue('Starting Devvit-Phaser MCP server'));
+  try {
+    await startServer();
+  } catch (error) {
+    console.error(chalk.red('Error starting MCP server:'), error);
+    process.exit(1);
+  }
 }

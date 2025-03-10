@@ -68,7 +68,7 @@
     "uuid": "^9.0.0"
   },
   "bin": {
-    "devvit-phaser-mcp": "./mcp/dist/cli.js"
+    "devvit-phaser-mcp": "mcp/dist/cli.js"
   },
   "files": [
     "dist",
