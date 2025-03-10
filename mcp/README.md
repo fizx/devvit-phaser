@@ -11,6 +11,15 @@ This package provides a [Model Context Protocol (MCP)](https://modelcontextproto
 
 ## Installation
 
+### Option 1: Global Installation
+
+```bash
+# Install devvit-phaser globally
+npm install -g devvit-phaser
+```
+
+### Option 2: Local Installation
+
 ```bash
 # Install the package dependencies
 cd mcp
@@ -23,6 +32,15 @@ npm run build
 ## Usage
 
 ### Starting the Server
+
+#### With Global Installation
+
+```bash
+# Start the MCP server from anywhere
+devvit-phaser-mcp
+```
+
+#### With Local Installation
 
 ```bash
 # Start the MCP server

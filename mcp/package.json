@@ -6,6 +6,7 @@
   "bin": {
     "devvit-phaser-mcp": "./dist/cli.js"
   },
+  "preferGlobal": true,
   "type": "module",
   "scripts": {
     "build": "tsc",

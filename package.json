@@ -1,6 +1,6 @@
 {
   "name": "devvit-phaser",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A library to integrate Phaser.js with Reddit's Devvit platform",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,12 +23,16 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build",
+    "build:all": "npm run build && npm run build:mcp",
+    "prepublishOnly": "npm run build:all",
     "docs": "typedoc",
     "docs:serve": "npx serve docs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "deploy-docs": "npm run build && npm run docs && gh-pages -d docs"
+    "deploy-docs": "npm run build && npm run docs && gh-pages -d docs",
+    "build:mcp": "cd mcp && npm install && npm run build",
+    "start:mcp": "cd mcp && npm start",
+    "postinstall": "cd mcp && npm install --no-package-lock"
   },
   "keywords": [
     "devvit",
@@ -63,8 +67,13 @@
     "@modelcontextprotocol/sdk": "^1.6.1",
     "uuid": "^9.0.0"
   },
+  "bin": {
+    "devvit-phaser-mcp": "./mcp/dist/cli.js"
+  },
   "files": [
     "dist",
-    "src"
+    "src",
+    "mcp/dist",
+    "mcp/package.json"
   ]
 }

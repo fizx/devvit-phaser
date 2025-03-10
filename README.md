@@ -208,8 +208,22 @@ Devvit-Phaser includes an MCP (Model Context Protocol) server that facilitates t
 
 ### Running the MCP Server
 
+You can run the MCP server in two ways:
+
+#### Option 1: Global Installation
+
 ```bash
-# Install dependencies
+# Install devvit-phaser globally
+npm install -g devvit-phaser
+
+# Run the MCP server from anywhere
+devvit-phaser-mcp
+```
+
+#### Option 2: From the Repository
+
+```bash
+# Install dependencies and build
 npm run build:mcp
 
 # Start the server
