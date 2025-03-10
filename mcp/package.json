@@ -3,9 +3,6 @@
   "version": "0.1.2",
   "description": "MCP server for testing Devvit-Phaser games",
   "main": "dist/index.js",
-  "bin": {
-    "devvit-phaser-mcp": "./dist/cli.js"
-  },
   "preferGlobal": true,
   "type": "module",
   "scripts": {
