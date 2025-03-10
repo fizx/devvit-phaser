@@ -1,9 +1,26 @@
 {
   "name": "devvit-phaser",
-  "version": "0.2.0",
+  "version": "0.5.0",
   "description": "A library to integrate Phaser.js with Reddit's Devvit platform",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js",
+      "require": "./dist/client.js"
+    },
+    "./srv": {
+      "types": "./dist/srv.d.ts",
+      "import": "./dist/srv.js",
+      "require": "./dist/srv.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "prepublishOnly": "npm run build",
@@ -30,7 +47,7 @@
   },
   "homepage": "https://fizx.github.io/devvit-phaser",
   "devDependencies": {
-    "@devvit/public-api": "^0.11.7",
+    "@devvit/public-api": "0.11.9-next-2025-03-10-b662c4c32.0",
     "@types/uuid": "^10.0.0",
     "gh-pages": "^6.3.0",
     "typedoc": "^0.25.0",
@@ -38,11 +55,16 @@
     "vitest": "^3.0.7"
   },
   "peerDependencies": {
-    "@devvit/public-api": "^0.11.0",
-    "devvit": "^0.11.0",
+    "@devvit/public-api": ">=0.11.8",
+    "devvit": ">=0.11.8",
     "phaser": "^3.86.0"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.6.1",
     "uuid": "^9.0.0"
-  }
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
 }
