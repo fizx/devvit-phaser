@@ -12,11 +12,16 @@ export async function createServer() {
   const browserManager = new BrowserManager();
   const playtestManager = new PlaytestManager();
 
-  // Create MCP server
+  // Create MCP server with explicit capabilities
   const server = new McpServer({
     name: "Devvit-Phaser Tester",
-    version: "0.1.0",
+    version: "0.1.1", // Match the package version
     description: "Tools for testing Devvit-Phaser games"
+  }, {
+    capabilities: {
+      tools: {}, // Enable tools capability
+      resources: {} // Enable resources capability
+    }
   });
 
   // Register resources
@@ -31,12 +36,12 @@ export async function createServer() {
 
 // Start the MCP server with stdio transport
 export async function startServer() {
-  console.log("Starting Devvit-Phaser MCP server...");
+  console.error("Starting Devvit-Phaser MCP server...");
   
   const server = await createServer();
   const transport = new StdioServerTransport();
   
-  console.log("MCP server ready, waiting for connections");
+  console.error("MCP server ready, waiting for connections");
   await server.connect(transport);
 }
 

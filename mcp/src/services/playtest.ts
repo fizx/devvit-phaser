@@ -113,9 +113,9 @@ export class PlaytestManager {
       this.process.stdout.pipe(writeStream);
       this.process.stderr.pipe(writeStream);
       
-      // Log output to console as well
+      // Log output to stderr only
       this.process.stdout.on('data', (data) => {
-        console.log(`[Playtest] ${data.toString().trim()}`);
+        console.error(`[Playtest] ${data.toString().trim()}`);
       });
       
       this.process.stderr.on('data', (data) => {

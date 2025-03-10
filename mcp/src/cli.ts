@@ -15,7 +15,7 @@ if (isHelpRequested) {
   program
     .name('devvit-phaser-mcp')
     .description('MCP server for testing Devvit-Phaser games')
-    .version('0.1.0');
+    .version('0.1.1');
   
   program
     .command('start', { isDefault: true })
@@ -32,8 +32,8 @@ if (isHelpRequested) {
 
 // Common server startup logic
 async function runServer() {
-  console.log(chalk.blue('Starting Devvit-Phaser MCP server'));
-  console.log(chalk.gray('Use --help to see available options'));
+  console.error(chalk.blue('Starting Devvit-Phaser MCP server'));
+  console.error(chalk.gray('Use --help to see available options'));
   try {
     await startServer();
   } catch (error) {
