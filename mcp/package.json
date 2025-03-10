@@ -1,6 +1,6 @@
 {
   "name": "devvit-phaser-mcp",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "MCP server for testing Devvit-Phaser games",
   "main": "dist/index.js",
   "preferGlobal": true,
