@@ -15,7 +15,7 @@ export async function createServer() {
   // Create MCP server with explicit capabilities
   const server = new McpServer({
     name: "Devvit-Phaser Tester",
-    version: "0.1.3", // Match the package version
+    version: "0.6.5", // Match the parent package version
     description: "Tools for testing Devvit-Phaser games"
   }, {
     capabilities: {

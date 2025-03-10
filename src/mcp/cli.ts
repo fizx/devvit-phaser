@@ -15,7 +15,7 @@ if (isHelpRequested) {
   program
     .name('devvit-phaser-mcp')
     .description('MCP server for testing Devvit-Phaser games')
-    .version('0.6.4'); // Use main package version
+    .version('0.6.5'); // Use main package version
   
   program
     .command('start', { isDefault: true })
