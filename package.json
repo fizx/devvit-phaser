@@ -23,16 +23,13 @@
   },
   "scripts": {
     "build": "tsc",
-    "build:all": "npm run build && npm run build:mcp",
-    "prepublishOnly": "npm run build:all",
+    "prepublishOnly": "npm run build",
     "docs": "typedoc",
     "docs:serve": "npx serve docs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "deploy-docs": "npm run build && npm run docs && gh-pages -d docs",
-    "build:mcp": "cd mcp && npm install && npm run build",
-    "start:mcp": "cd mcp && npm start",
-    "postinstall": "cd mcp && npm ci --production --no-package-lock || cd mcp && npm install --production --no-package-lock"
+    "start:mcp": "node dist/mcp/cli.js"
   },
   "keywords": [
     "devvit",
@@ -65,15 +62,17 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "playwright": "^1.42.0",
+    "zod": "^3.22.4"
   },
   "bin": {
-    "devvit-phaser-mcp": "mcp/dist/cli.js"
+    "devvit-phaser-mcp": "dist/mcp/cli.js"
   },
   "files": [
     "dist",
-    "src",
-    "mcp/dist",
-    "mcp/package.json"
+    "src"
   ]
 }
