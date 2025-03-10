@@ -194,4 +194,17 @@ function registerTools(
       };
     }
   );
+  
+  server.tool(
+    "tail-logs",
+    { 
+      lines: z.number().optional().default(100)
+    },
+    async ({ lines }) => {
+      const logs = await playtestManager.getLogs(lines);
+      return {
+        content: [{ type: "text", text: logs }]
+      };
+    }
+  );
 }
