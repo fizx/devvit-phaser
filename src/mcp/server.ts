@@ -170,7 +170,7 @@ function registerTools(
     "devvit-iframe-eval",
     { code: z.string() },
     async ({ code }) => {
-      const result = await browserManager.evaluateDevvitIframe(code);
+      const result = await browserManager.evaluateInDevvitIframe(code);
       return {
         content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
       };

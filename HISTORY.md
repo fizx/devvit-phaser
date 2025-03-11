@@ -1,5 +1,12 @@
 # History / Changelog
 
+## 0.7.4 (2025-03-11)
+
+### Bug Fixes
+
+- Fixed method name inconsistency in devvit-iframe-eval tool
+- Corrected browser service method name from evaluateDevvitIframe to evaluateInDevvitIframe
+
 ## 0.7.3 (2025-03-11)
 
 ### Bug Fixes

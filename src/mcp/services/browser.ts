@@ -200,6 +200,59 @@ export class BrowserManager {
       };
     }
   }
+  
+  /**
+   * Evaluate JavaScript in the Devvit iframe context
+   */
+  async evaluateInDevvitIframe(code: string): Promise<BrowserResponse> {
+    try {
+      if (!this.browser || !this.page) {
+        return {
+          success: false,
+          message: "Browser is not running. Launch it first."
+        };
+      }
+
+      // Navigate through the shadow DOM to find the iframe
+      const result = await this.page.evaluate((evalCode) => {
+        try {
+          // Get the root loader element
+          const loader = document.querySelector('shreddit-devvit-ui-loader');
+          if (!loader) throw new Error("Could not find shreddit-devvit-ui-loader");
+          
+          // Access the shadow DOM
+          const renderer = loader.shadowRoot?.querySelector('devvit-blocks-renderer');
+          if (!renderer) throw new Error("Could not find devvit-blocks-renderer in shadow DOM");
+          
+          // Access the next level of shadow DOM
+          const webView = renderer.shadowRoot?.querySelector('devvit-blocks-web-view');
+          if (!webView) throw new Error("Could not find devvit-blocks-web-view in shadow DOM");
+          
+          // Get the iframe
+          const iframe = webView.shadowRoot?.querySelector('iframe');
+          if (!iframe) throw new Error("Could not find iframe in shadow DOM");
+          
+          // Execute the code in the iframe context
+          // Using any to bypass the TypeScript restriction since we know eval exists
+          return ((iframe as HTMLIFrameElement).contentWindow as any)?.eval?.(evalCode);
+        } catch (error) {
+          return { error: error instanceof Error ? error.message : String(error) };
+        }
+      }, code);
+
+      return {
+        success: true,
+        message: "Script executed successfully in Devvit iframe",
+        data: { result }
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return {
+        success: false,
+        message: `Devvit iframe evaluation failed: ${errorMessage}`
+      };
+    }
+  }
 
   /**
    * Close the browser
