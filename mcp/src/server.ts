@@ -158,6 +158,18 @@ function registerTools(
     }
   );
 
+  // Devvit iframe eval tool
+  server.tool(
+    "devvit-iframe-eval",
+    { code: z.string() },
+    async ({ code }) => {
+      const result = await browserManager.evaluateInDevvitIframe(code);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
   // Playtest tools
   server.tool(
     "start-playtest",

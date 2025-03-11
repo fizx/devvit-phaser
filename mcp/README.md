@@ -67,6 +67,7 @@ The server communicates via stdio, making it easy to integrate with MCP clients.
 | `browser-navigate` | `url` (string) | Navigate to a URL |
 | `browser-interact` | `action` ("click", "type", "press"), `selector` (string), `value` (optional string) | Interact with a page element |
 | `browser-evaluate` | `script` (string) | Evaluate JavaScript in the page context |
+| `devvit-iframe-eval` | `code` (string) | Evaluate JavaScript directly in the Devvit iframe context |
 | `browser-close` | - | Close the browser |
 
 #### Playtest Tools

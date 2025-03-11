@@ -202,6 +202,109 @@ export class BrowserManager {
   }
 
   /**
+   * Evaluate JavaScript in the Devvit iframe
+   * 
+   * This uses the DebugEndpoint we added to devvit-phaser to run code in the iframe context
+   */
+  async evaluateInDevvitIframe(code: string): Promise<BrowserResponse> {
+    try {
+      if (!this.browser || !this.page) {
+        return {
+          success: false,
+          message: "Browser is not running. Launch it first."
+        };
+      }
+
+      // Set up the handler for receiving messages from the iframe
+      const setupScript = `
+        // Create a promise to receive the result
+        window.__devvitEvalPromise = new Promise((resolve) => {
+          // Set up the message handler
+          window.__devvitMessageHandler = (event) => {
+            if (event.data && (event.data.type === 'devvit_debug_result' || event.data.type === 'devvit_debug_error')) {
+              // Remove the event listener
+              window.removeEventListener('message', window.__devvitMessageHandler);
+              // Resolve with the result or error
+              resolve({
+                type: event.data.type,
+                result: event.data.result,
+                error: event.data.error
+              });
+            }
+          };
+          
+          // Add the event listener
+          window.addEventListener('message', window.__devvitMessageHandler);
+        });
+      `;
+      
+      // Set up the code execution in the Devvit iframe
+      const executeScript = `
+        // Helper function to find the Devvit iframe
+        function findDevvitIframe() {
+          // Start with the UI loader
+          const uiLoader = document.querySelector('shreddit-devvit-ui-loader');
+          if (!uiLoader || !uiLoader.shadowRoot) return null;
+          
+          // Find the blocks renderer
+          const blocksRenderer = uiLoader.shadowRoot.querySelector('devvit-blocks-renderer');
+          if (!blocksRenderer || !blocksRenderer.shadowRoot) return null;
+          
+          // Find the web view
+          const webView = blocksRenderer.shadowRoot.querySelector('devvit-blocks-web-view');
+          if (!webView || !webView.shadowRoot) return null;
+          
+          // Find the iframe
+          return webView.shadowRoot.querySelector('iframe');
+        }
+        
+        // Find the iframe
+        const iframe = findDevvitIframe();
+        if (!iframe) {
+          return { error: "Could not find Devvit iframe" };
+        }
+        
+        // Send the message to the iframe
+        iframe.contentWindow.postMessage({
+          type: 'devvit_debug_eval',
+          requestId: 'mcp-' + Date.now(),
+          code: ${JSON.stringify(code)}
+        }, '*');
+        
+        // Wait for the response
+        const result = await window.__devvitEvalPromise;
+        return result;
+      `;
+
+      // Set up the handler
+      await this.page.evaluate(setupScript);
+      
+      // Execute the code and wait for the result
+      const result = await this.page.evaluate(executeScript);
+
+      if (result.error) {
+        return {
+          success: false,
+          message: `Error in Devvit iframe: ${result.error}`,
+          data: { error: result.error }
+        };
+      }
+
+      return {
+        success: true,
+        message: "Code executed successfully in Devvit iframe",
+        data: { result: result.result }
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return {
+        success: false,
+        message: `Failed to evaluate in Devvit iframe: ${errorMessage}`
+      };
+    }
+  }
+
+  /**
    * Close the browser
    */
   async close(): Promise<BrowserResponse> {
