@@ -1,5 +1,12 @@
 # History / Changelog
 
+## 0.7.3 (2025-03-11)
+
+### Bug Fixes
+
+- Fixed missing version tool in npm package
+- Resolved duplicate source files between src/mcp and mcp/src directories
+
 ## 0.7.2 (2025-03-11)
 
 ### MCP Server Improvements
