@@ -213,32 +213,123 @@ export class BrowserManager {
         };
       }
 
-      // Navigate through the shadow DOM to find the iframe
+      // Find the Devvit iframe through the known DOM structure
       const result = await this.page.evaluate((evalCode) => {
         try {
-          // Look for devvit-surface first
-          const surface = document.querySelector('devvit-surface');
-          if (!surface) throw new Error("Could not find devvit-surface");
+          // Find the devvit-ui-loader
+          const loader = document.querySelector('shreddit-devvit-ui-loader');
+          if (!loader || !loader.shadowRoot) {
+            return { 
+              success: false, 
+              error: "Could not find shreddit-devvit-ui-loader or its shadowRoot" 
+            };
+          }
           
-          // Access the shadow DOM of the surface
-          const webView = surface.shadowRoot?.querySelector('devvit-blocks-web-view');
-          if (!webView) throw new Error("Could not find devvit-blocks-web-view in shadow DOM");
+          // Find the web-view inside loader's shadow DOM
+          const webView = loader.shadowRoot.querySelector('devvit-blocks-web-view');
+          if (!webView || !webView.shadowRoot) {
+            return { 
+              success: false, 
+              error: "Could not find devvit-blocks-web-view or its shadowRoot" 
+            };
+          }
           
-          // Get the iframe
-          const iframe = webView.shadowRoot?.querySelector('iframe');
-          if (!iframe) throw new Error("Could not find iframe in devvit-blocks-web-view");
+          // Find the iframe inside web-view's shadow DOM
+          const iframe = webView.shadowRoot.querySelector('iframe');
+          if (!iframe || !iframe.contentWindow) {
+            return { 
+              success: false, 
+              error: "Could not find iframe or its contentWindow" 
+            };
+          }
           
           // Execute the code in the iframe context
-          // Using any to bypass the TypeScript restriction since we know eval exists
-          return ((iframe as HTMLIFrameElement).contentWindow as any)?.eval?.(evalCode);
+          try {
+            // Using any to bypass TypeScript restrictions
+            const result = (iframe.contentWindow as any).eval(evalCode);
+            return { success: true, result };
+          } catch (evalError) {
+            return { 
+              success: false, 
+              error: evalError instanceof Error ? evalError.message : String(evalError) 
+            };
+          }
         } catch (error) {
-          return { error: error instanceof Error ? error.message : String(error) };
+          return { 
+            success: false, 
+            error: error instanceof Error ? error.message : String(error) 
+          };
         }
       }, code);
 
+      // Handle different result scenarios
+      if (result && typeof result === 'object' && 'success' in result) {
+        if (result.success === true) {
+          return {
+            success: true,
+            message: "Script executed successfully in Devvit iframe",
+            data: { result: result.result }
+          };
+        } else if ('error' in result) {
+          // Fallback: Collect information about available frames
+          const frameInfo = await this.page.evaluate(() => {
+            const frames: any[] = [];
+            
+            // Get all iframes
+            document.querySelectorAll('iframe').forEach((iframe: HTMLIFrameElement) => {
+              frames.push({
+                id: iframe.id,
+                src: iframe.src,
+                name: iframe.name
+              });
+            });
+            
+            // Try to find iframes in shadow DOM
+            const shadowHosts = Array.from(document.querySelectorAll('*'))
+              .filter(el => el.shadowRoot);
+            
+            const shadowInfo: any[] = [];
+            shadowHosts.forEach(host => {
+              const hostInfo = {
+                tag: host.tagName,
+                id: host.id,
+                shadowChildren: [] as string[]
+              };
+              
+              if (host.shadowRoot) {
+                Array.from(host.shadowRoot.children).forEach(child => {
+                  hostInfo.shadowChildren.push(child.tagName);
+                });
+                
+                const shadowIframes = host.shadowRoot.querySelectorAll('iframe');
+                shadowIframes.forEach(iframe => {
+                  frames.push({
+                    id: iframe.id,
+                    src: iframe.src,
+                    name: iframe.name,
+                    inShadow: true,
+                    host: host.tagName
+                  });
+                });
+              }
+              
+              shadowInfo.push(hostInfo);
+            });
+            
+            return { frames, shadowInfo };
+          });
+          
+          return {
+            success: false,
+            message: `Devvit iframe evaluation failed: ${result.error}`,
+            data: { frameInfo }
+          };
+        }
+      }
+      
       return {
-        success: true,
-        message: "Script executed successfully in Devvit iframe",
+        success: false,
+        message: "Unexpected result format from evaluation",
         data: { result }
       };
     } catch (error) {
