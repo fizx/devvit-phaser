@@ -216,21 +216,17 @@ export class BrowserManager {
       // Navigate through the shadow DOM to find the iframe
       const result = await this.page.evaluate((evalCode) => {
         try {
-          // Get the root loader element
-          const loader = document.querySelector('shreddit-devvit-ui-loader');
-          if (!loader) throw new Error("Could not find shreddit-devvit-ui-loader");
+          // Look for devvit-surface first
+          const surface = document.querySelector('devvit-surface');
+          if (!surface) throw new Error("Could not find devvit-surface");
           
-          // Access the shadow DOM
-          const renderer = loader.shadowRoot?.querySelector('devvit-blocks-renderer');
-          if (!renderer) throw new Error("Could not find devvit-blocks-renderer in shadow DOM");
-          
-          // Access the next level of shadow DOM
-          const webView = renderer.shadowRoot?.querySelector('devvit-blocks-web-view');
+          // Access the shadow DOM of the surface
+          const webView = surface.shadowRoot?.querySelector('devvit-blocks-web-view');
           if (!webView) throw new Error("Could not find devvit-blocks-web-view in shadow DOM");
           
           // Get the iframe
           const iframe = webView.shadowRoot?.querySelector('iframe');
-          if (!iframe) throw new Error("Could not find iframe in shadow DOM");
+          if (!iframe) throw new Error("Could not find iframe in devvit-blocks-web-view");
           
           // Execute the code in the iframe context
           // Using any to bypass the TypeScript restriction since we know eval exists
