@@ -12,9 +12,10 @@
       "require": "./dist/index.js"
     },
     "./client": {
-      "types": "./dist/client.d.ts",
+      "types": "./dist/client.d.ts", 
       "import": "./dist/client.js",
-      "require": "./dist/client.js"
+      "require": "./dist/client.js",
+      "browser": "./dist/client.browser.js"
     },
     "./srv": {
       "types": "./dist/srv.d.ts",
@@ -22,8 +23,11 @@
       "require": "./dist/srv.js"
     }
   },
+  "sideEffects": false,
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run build:browser",
+    "build:browser": "esbuild src/client.ts --bundle --format=esm --outdir=dist --outbase=src --out-extension:.js=.browser.js --external:phaser --platform=browser --define:isProduction=true --tree-shaking=true",
+    "build:browser:dev": "esbuild src/client.ts --bundle --format=esm --outdir=dist --outbase=src --out-extension:.js=.browser.js --external:phaser --platform=browser --define:isProduction=false --tree-shaking=true",
     "prepublishOnly": "npm run build",
     "docs": "typedoc",
     "docs:serve": "npx serve docs",
@@ -52,6 +56,7 @@
     "@devvit/public-api": "0.11.9-next-2025-03-10-b662c4c32.0",
     "@types/node": "^22.13.10",
     "@types/uuid": "^10.0.0",
+    "esbuild": "^0.20.1",
     "gh-pages": "^6.3.0",
     "typedoc": "^0.25.0",
     "typescript": "^5.0.0",

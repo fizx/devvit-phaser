@@ -14,6 +14,19 @@ This package also includes an MCP (Model Context Protocol) server for testing De
 npm install devvit-phaser
 ```
 
+## Import Best Practices
+
+When using this library, always use the specific subpath imports to prevent bundling unnecessary Node.js dependencies in browser code:
+
+```typescript
+// ✅ Good: Use specific subpath imports 
+import { SyncedDataManager } from 'devvit-phaser/client'; // For client-side code
+import { PhaserGameSrv } from 'devvit-phaser/srv';       // For server-side code
+
+// ❌ Bad: Avoid root imports which pull in both client and server code
+// import { SyncedDataManager, PhaserGameSrv } from 'devvit-phaser';
+```
+
 ## Architecture
 
 Devvit-Phaser is built around a few core concepts:

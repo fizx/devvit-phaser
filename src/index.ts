@@ -20,8 +20,10 @@ export { SyncedDataManager } from './client/SyncedDataManager.js';
 export { PhaserGameSrv } from './srv/PhaserGameSrv.js';
 export { DataManagerSrv } from './srv/DataManagerSrv.js';
 
-// Log warning in development (but not in production to avoid console spam)
-if (process.env.NODE_ENV !== 'production') {
+// Log warning without using process.env
+// This allows browser bundlers to properly tree-shake Node.js dependencies
+const isProduction = false; // Will be replaced by bundler with true/false
+if (!isProduction) {
   console.warn(
     'DEPRECATED: Importing from "devvit-phaser" directly is deprecated. ' +
     'Please use specific imports instead:\n' +
