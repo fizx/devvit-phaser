@@ -7,9 +7,11 @@ export class DataManagerSrv {
 
   get subscriptionId() {
     // Use a more public-facing method to get the channel
+    // Ensure the ID is valid for useChannel (only letters, numbers, and underscores)
+    const sanitizedId = this.id.id.replace(/[^a-zA-Z0-9_]/g, '_');
     return this.id.isGlobal
-      ? this.id.id
-      : `${this.parent.postId}_${this.id.id}`;
+      ? sanitizedId
+      : `${this.parent.postId}_${sanitizedId}`;
   }
 
   private createMutation(

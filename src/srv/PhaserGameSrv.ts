@@ -21,9 +21,11 @@ export class PhaserGameSrv extends BasicGameSrv {
   }
 
   protected toSubscriptionId(dataManagerId: DataManagerId) {
+    // Ensure the ID is valid for useChannel (only letters, numbers, and underscores)
+    const sanitizedId = dataManagerId.id.replace(/[^a-zA-Z0-9_]/g, '_');
     return dataManagerId.isGlobal
-      ? dataManagerId.id
-      : `${this.postId}_${dataManagerId.id}`;
+      ? sanitizedId
+      : `${this.postId}_${sanitizedId}`;
   }
 
   /**

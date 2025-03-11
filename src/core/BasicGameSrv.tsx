@@ -434,11 +434,14 @@ export class BasicGameSrv {
       console.log("Subscriptions", JSON.stringify(subscriptions));
       let channels: { [key: string]: UseChannelResult } = {};
       for (const sub of subscriptions) {
+        // Sanitize channel name to ensure it only contains letters, numbers, and underscores
+        const sanitizedSub = sub.replace(/[^a-zA-Z0-9_]/g, '_');
+        console.log(`Using sanitized channel name: ${sanitizedSub} (original: ${sub})`);
         channels[sub] = useChannel({
-          name: sub,
+          name: sanitizedSub,
           onMessage: (msg) => {
             that.onReceive({
-              channel: sub,
+              channel: sub, // Keep original channel name for application logic
               from: (msg as any).from,
               data: (msg as any).msg,
             });
