@@ -202,7 +202,8 @@ export class BrowserManager {
   }
   
   /**
-   * Evaluate JavaScript in the Devvit iframe context
+   * Evaluate JavaScript in the Devvit iframe context using the postMessage API
+   * This approach works with the DebugEndpoint in the client code
    */
   async evaluateInDevvitIframe(code: string): Promise<BrowserResponse> {
     try {
@@ -213,64 +214,168 @@ export class BrowserManager {
         };
       }
 
-      // Find the Devvit iframe through the known DOM structure
-      const result = await this.page.evaluate((evalCode) => {
-        try {
-          // Find the devvit-ui-loader
-          const loader = document.querySelector('shreddit-devvit-ui-loader');
-          if (!loader || !loader.shadowRoot) {
-            return { 
-              success: false, 
-              error: "Could not find shreddit-devvit-ui-loader or its shadowRoot" 
-            };
+      // This will use postMessage to communicate with the iframe
+      const result = await this.page.evaluate(async (evalCode) => {
+        // Helper function to recursively search for iframe in shadow DOM
+        function findDevvitIframe(startElement: Element): HTMLIFrameElement | null {
+          // If this is a web-view element with a shadow root that contains an iframe, return the iframe
+          if (
+            startElement.tagName.toLowerCase() === 'devvit-blocks-web-view' && 
+            startElement.shadowRoot
+          ) {
+            const iframe = startElement.shadowRoot.querySelector('iframe');
+            if (iframe) return iframe;
           }
           
-          // Find the web-view inside loader's shadow DOM
-          const webView = loader.shadowRoot.querySelector('devvit-blocks-web-view');
-          if (!webView || !webView.shadowRoot) {
-            return { 
-              success: false, 
-              error: "Could not find devvit-blocks-web-view or its shadowRoot" 
-            };
+          // If this element has a shadow root, search in its children
+          if (startElement.shadowRoot) {
+            // First check direct children
+            const webView = startElement.shadowRoot.querySelector('devvit-blocks-web-view');
+            if (webView) {
+              const iframe = findDevvitIframe(webView);
+              if (iframe) return iframe;
+            }
+            
+            // Then try all children recursively
+            const children = Array.from(startElement.shadowRoot.children);
+            for (const child of children) {
+              const iframe = findDevvitIframe(child);
+              if (iframe) return iframe;
+            }
           }
           
-          // Find the iframe inside web-view's shadow DOM
-          const iframe = webView.shadowRoot.querySelector('iframe');
-          if (!iframe || !iframe.contentWindow) {
-            return { 
-              success: false, 
-              error: "Could not find iframe or its contentWindow" 
-            };
+          return null;
+        }
+
+        // Find the iframe using various search strategies
+        let targetIframe: HTMLIFrameElement | null = null;
+        
+        // Try direct approach
+        const directLoader = document.querySelector('shreddit-devvit-ui-loader');
+        if (directLoader?.shadowRoot) {
+          const webView = directLoader.shadowRoot.querySelector('devvit-blocks-web-view');
+          if (webView?.shadowRoot) {
+            const iframe = webView.shadowRoot.querySelector('iframe');
+            if (iframe) {
+              console.log("Found iframe using direct approach");
+              targetIframe = iframe;
+            }
           }
+        }
+        
+        // Try nested approach with renderer
+        if (!targetIframe) {
+          const origLoader = document.querySelector('shreddit-devvit-ui-loader');
+          if (origLoader?.shadowRoot) {
+            const renderer = origLoader.shadowRoot.querySelector('devvit-blocks-renderer');
+            if (renderer?.shadowRoot) {
+              const webView = renderer.shadowRoot.querySelector('devvit-blocks-web-view');
+              if (webView?.shadowRoot) {
+                const iframe = webView.shadowRoot.querySelector('iframe');
+                if (iframe) {
+                  console.log("Found iframe using original approach");
+                  targetIframe = iframe;
+                }
+              }
+            }
+          }
+        }
+        
+        // Try recursive search
+        if (!targetIframe) {
+          const shadowHosts = Array.from(document.querySelectorAll('*'))
+            .filter(el => el.shadowRoot);
           
-          // Execute the code in the iframe context
-          try {
-            // Using any to bypass TypeScript restrictions
-            const result = (iframe.contentWindow as any).eval(evalCode);
-            return { success: true, result };
-          } catch (evalError) {
-            return { 
-              success: false, 
-              error: evalError instanceof Error ? evalError.message : String(evalError) 
-            };
+          for (const element of shadowHosts) {
+            const iframe = findDevvitIframe(element);
+            if (iframe) {
+              console.log("Found iframe using recursive search");
+              targetIframe = iframe;
+              break;
+            }
           }
-        } catch (error) {
+        }
+        
+        // If we still don't have an iframe, return error
+        if (!targetIframe) {
           return { 
             success: false, 
-            error: error instanceof Error ? error.message : String(error) 
+            error: "Could not find Devvit iframe" 
           };
         }
+        
+        // Found iframe, now use postMessage to communicate
+        return new Promise((resolve) => {
+          const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+          let timeoutId: number;
+          
+          // Function to handle the response
+          function messageHandler(event: MessageEvent) {
+            const data = event.data;
+            
+            // Only handle messages with our requestId
+            if (data && data.requestId === requestId) {
+              // Clean up
+              window.removeEventListener('message', messageHandler);
+              clearTimeout(timeoutId);
+              
+              if (data.type === 'devvit_debug_result') {
+                resolve({ 
+                  success: true, 
+                  result: data.result,
+                  method: "postMessage" 
+                });
+              } else if (data.type === 'devvit_debug_error') {
+                resolve({ 
+                  success: false, 
+                  error: `Eval error: ${data.error}`,
+                  method: "postMessage" 
+                });
+              }
+            }
+          }
+          
+          // Set up timeout
+          timeoutId = window.setTimeout(() => {
+            window.removeEventListener('message', messageHandler);
+            resolve({ 
+              success: false, 
+              error: "Timeout waiting for iframe response. Make sure DebugEndpoint.start() is called in your client code.",
+              method: "postMessage" 
+            });
+          }, 5000) as unknown as number;
+          
+          // Listen for response
+          window.addEventListener('message', messageHandler);
+          
+          // Send the code to the iframe
+          targetIframe.contentWindow?.postMessage({
+            type: 'devvit_debug_eval',
+            requestId: requestId,
+            code: evalCode
+          }, '*');
+          
+          console.log("Sent evaluation request to iframe, waiting for response...");
+        });
       }, code);
 
       // Handle different result scenarios
       if (result && typeof result === 'object' && 'success' in result) {
-        if (result.success === true) {
+        // Define a more specific type for better TypeScript support
+        const typedResult = result as {
+          success: boolean;
+          method?: string;
+          result?: any;
+          error?: string;
+        };
+        
+        if (typedResult.success === true) {
           return {
             success: true,
-            message: "Script executed successfully in Devvit iframe",
-            data: { result: result.result }
+            message: `Script executed successfully in Devvit iframe (method: ${typedResult.method || 'unknown'})`,
+            data: { result: typedResult.result }
           };
-        } else if ('error' in result) {
+        } else if ('error' in typedResult) {
           // Fallback: Collect information about available frames
           const frameInfo = await this.page.evaluate(() => {
             const frames: any[] = [];
@@ -321,7 +426,7 @@ export class BrowserManager {
           
           return {
             success: false,
-            message: `Devvit iframe evaluation failed: ${result.error}`,
+            message: `Devvit iframe evaluation failed: ${typedResult.error || 'Unknown error'}`,
             data: { frameInfo }
           };
         }
