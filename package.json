@@ -1,6 +1,6 @@
 {
   "name": "devvit-phaser",
-  "version": "0.6.9",
+  "version": "0.7.2",
   "description": "A library to integrate Phaser.js with Reddit's Devvit platform",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -34,7 +34,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "deploy-docs": "npm run build && npm run docs && gh-pages -d docs",
-    "start:mcp": "node dist/mcp/cli.js"
+    "start:mcp": "node dist/mcp/cli.js",
+    "global-install": "npm i -g ."
   },
   "keywords": [
     "devvit",

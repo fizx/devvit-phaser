@@ -15,7 +15,7 @@ export async function createServer() {
   // Create MCP server with explicit capabilities
   const server = new McpServer({
     name: "Devvit-Phaser Tester",
-    version: "0.6.5", // Match the parent package version
+    version: "0.7.1", // Match the parent package version
     description: "Tools for testing Devvit-Phaser games"
   }, {
     capabilities: {
@@ -141,6 +141,17 @@ function registerTools(
     { script: z.string() },
     async ({ script }) => {
       const result = await browserManager.evaluate(script);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
+  server.tool(
+    "devvit-iframe-eval",
+    { code: z.string() },
+    async ({ code }) => {
+      const result = await browserManager.evaluateDevvitIframe(code);
       return {
         content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
       };

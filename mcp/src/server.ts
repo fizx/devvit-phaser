@@ -5,17 +5,22 @@ import { z } from "zod";
 // Service managers
 import { BrowserManager } from "./services/browser.js";
 import { PlaytestManager } from "./services/playtest.js";
+import { VersionManager } from "./services/version.js";
 
 // MCP server for Devvit-Phaser testing
 export async function createServer() {
   // Initialize service managers
   const browserManager = new BrowserManager();
   const playtestManager = new PlaytestManager();
+  const versionManager = new VersionManager();
+  
+  // Get package version for MCP server info
+  const versionInfo = await versionManager.getVersionInfo();
 
   // Create MCP server with explicit capabilities
   const server = new McpServer({
     name: "Devvit-Phaser Tester",
-    version: "0.1.1", // Match the package version
+    version: versionInfo.devvitPhaser, // Use the actual package version
     description: "Tools for testing Devvit-Phaser games"
   }, {
     capabilities: {
@@ -25,10 +30,10 @@ export async function createServer() {
   });
 
   // Register resources
-  registerResources(server, { browserManager, playtestManager });
+  registerResources(server, { browserManager, playtestManager, versionManager });
   
   // Register tools
-  registerTools(server, { browserManager, playtestManager });
+  registerTools(server, { browserManager, playtestManager, versionManager });
 
   // Return the configured server
   return server;
@@ -48,9 +53,10 @@ export async function startServer() {
 // Register all server resources
 function registerResources(
   server: McpServer, 
-  { browserManager, playtestManager }: { 
+  { browserManager, playtestManager, versionManager }: { 
     browserManager: BrowserManager, 
-    playtestManager: PlaytestManager 
+    playtestManager: PlaytestManager,
+    versionManager: VersionManager
   }
 ) {
   // Browser status resource
@@ -88,14 +94,27 @@ function registerResources(
       }]
     })
   );
+  
+  // Version info resource
+  server.resource(
+    "version-info",
+    "version://info",
+    async (uri) => ({
+      contents: [{
+        uri: uri.href,
+        text: JSON.stringify(await versionManager.getVersionInfo(), null, 2)
+      }]
+    })
+  );
 }
 
 // Register all server tools
 function registerTools(
   server: McpServer, 
-  { browserManager, playtestManager }: { 
+  { browserManager, playtestManager, versionManager }: { 
     browserManager: BrowserManager, 
-    playtestManager: PlaytestManager 
+    playtestManager: PlaytestManager,
+    versionManager: VersionManager
   }
 ) {
   // Browser tools
@@ -203,6 +222,52 @@ function registerTools(
       const result = await playtestManager.stop();
       return {
         content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+  
+  // Tool to get MCP server and devvit-phaser version info
+  server.tool(
+    "version",
+    { 
+      format: z.enum(["json", "text"]).optional().default("text") 
+    },
+    async ({ format }) => {
+      const versionInfo = await versionManager.getVersionInfo();
+      
+      if (format === "json") {
+        return {
+          content: [{ type: "text", text: JSON.stringify(versionInfo, null, 2) }]
+        };
+      } else {
+        // Format as readable text
+        const lines = [
+          `Devvit-Phaser v${versionInfo.devvitPhaser}`,
+          `MCP Server v${versionInfo.mcpServer}`,
+          `Node.js ${versionInfo.node}`,
+          `Devvit API ${versionInfo.devvitApi}`,
+          '',
+          'Dependencies:',
+          ...Object.entries(versionInfo.dependencies).map(([name, version]) => `  ${name}: ${version}`)
+        ];
+        
+        return {
+          content: [{ type: "text", text: lines.join('\n') }]
+        };
+      }
+    }
+  );
+  
+  // Tool to get logs from the playtest server
+  server.tool(
+    "tail-logs",
+    { 
+      lines: z.number().optional().default(100) 
+    },
+    async ({ lines }) => {
+      const logs = await playtestManager.getLogs(lines);
+      return {
+        content: [{ type: "text", text: logs }]
       };
     }
   );

@@ -56,6 +56,7 @@ The server communicates via stdio, making it easy to integrate with MCP clients.
 | `browser://status` | Current browser status (running, URL, title) |
 | `playtest://status` | Current playtest status (running, community, uptime) |
 | `logs://devvit` | Recent logs from the Devvit playtest process |
+| `version://info` | Version information for devvit-phaser and its dependencies |
 
 ### MCP Tools
 
@@ -77,6 +78,8 @@ The server communicates via stdio, making it easy to integrate with MCP clients.
 | `start-playtest` | `community` (string), `path` (optional string) | Start a Devvit playtest for a community |
 | `restart-playtest` | - | Restart the current playtest |
 | `stop-playtest` | - | Stop the current playtest |
+| `tail-logs` | `lines` (optional number, default 100) | Get recent logs from the playtest |
+| `version` | `format` (optional "json" or "text", default "text") | Get version information about devvit-phaser and MCP server |
 
 ## Example Queries
 
@@ -110,6 +113,18 @@ Here are some example MCP queries to use with this server:
     "name": "start-playtest",
     "arguments": {
       "community": "reddit_dev"
+    }
+  }
+}
+```
+
+```json
+{
+  "method": "call_tool",
+  "params": {
+    "name": "version",
+    "arguments": {
+      "format": "text"
     }
   }
 }
