@@ -1,10 +1,10 @@
 import Phaser from "phaser";
-import {
+import type {
   DataManagerId,
   DataManagerMutation,
   DataManagerSubscription,
 } from "../types.js";
-import { JSONValue } from "@devvit/public-api";
+import type { JSONValue } from "@devvit/public-api";
 
 declare global {
   interface Window {

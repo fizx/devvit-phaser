@@ -12,10 +12,10 @@
       "require": "./dist/index.js"
     },
     "./client": {
-      "types": "./dist/client.d.ts",
+      "types": "./dist/client.d.ts", 
+      "browser": "./dist/client.browser.js",
       "import": "./dist/client.js",
-      "require": "./dist/client.js",
-      "browser": "./dist/client.browser.js"
+      "require": "./dist/client.js"
     },
     "./srv": {
       "types": "./dist/srv.d.ts",
