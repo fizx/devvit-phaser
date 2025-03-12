@@ -120,9 +120,12 @@ function registerTools(
   // Browser tools
   server.tool(
     "browser-launch",
-    { headless: z.boolean().optional().default(true) },
-    async ({ headless }) => {
-      const result = await browserManager.launch({ headless });
+    { 
+      headless: z.boolean().optional().default(true),
+      disableSecurity: z.boolean().optional().default(false)
+    },
+    async ({ headless, disableSecurity }) => {
+      const result = await browserManager.launch({ headless, disableSecurity });
       return {
         content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
       };

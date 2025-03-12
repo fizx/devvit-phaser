@@ -49,8 +49,14 @@ export class BrowserManager {
 
   /**
    * Launch a browser instance
+   * @param options Configuration options
+   * @param options.headless Whether to run browser in headless mode (default: true)
+   * @param options.disableSecurity Whether to disable web security (default: false)
    */
-  async launch({ headless = true }: { headless?: boolean } = {}): Promise<BrowserResponse> {
+  async launch({ headless = true, disableSecurity = false }: { 
+    headless?: boolean,
+    disableSecurity?: boolean
+  } = {}): Promise<BrowserResponse> {
     try {
       if (this.browser) {
         return {
@@ -59,18 +65,25 @@ export class BrowserManager {
         };
       }
 
+      // Launch browser with specified options
       this.browser = await chromium.launch({ 
-        headless 
+        headless,
+        args: disableSecurity ? ['--disable-web-security'] : []
       });
       
-      this.context = await this.browser.newContext();
+      // Create context with specified options
+      this.context = await this.browser.newContext({
+        ignoreHTTPSErrors: disableSecurity
+      });
+      
       this.page = await this.context.newPage();
 
       return {
         success: true,
         message: "Browser launched successfully",
         data: {
-          headless
+          headless,
+          disableSecurity
         }
       };
     } catch (error) {
