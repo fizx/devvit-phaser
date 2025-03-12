@@ -1,6 +1,6 @@
 {
   "name": "devvit-phaser",
-  "version": "0.7.12",
+  "version": "0.7.13",
   "description": "A library to integrate Phaser.js with Reddit's Devvit platform",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
