@@ -250,6 +250,16 @@ export class BrowserManager {
   /**
    * Call a predefined function in the Devvit iframe context
    * This is a safer alternative to evaluateInDevvitIframe as it doesn't use eval
+   * 
+   * Communication mechanism:
+   * 1. We find the devvit-blocks-web-view element in the shadow DOM
+   * 2. We use its postMessage method to send messages to the iframe
+   * 3. We listen for the 'devvit-web-view-message' custom event to receive responses
+   * 
+   * This approach is necessary because:
+   * - Direct iframe.contentWindow.postMessage fails due to cross-origin restrictions
+   * - The web view's message handler calls stopImmediatePropagation() which prevents
+   *   window-level message listeners from receiving the messages
    */
   async callDevvitFunction(functionName: string, args: any[] = []): Promise<BrowserResponse> {
     try {
@@ -260,20 +270,19 @@ export class BrowserManager {
         };
       }
 
-      // Use postMessage to call a predefined function in the iframe
+      // Use the WebView element's postMessage and custom event to communicate with the iframe
       const result = await this.page.evaluate(async ({ fnName, fnArgs }) => {
-        // Find the iframe using the correct nested shadow DOM selector
-        const targetIframe = document.querySelector("shreddit-devvit-ui-loader")?.shadowRoot
+        // Find the WebView element
+        const webViewElement = document.querySelector("shreddit-devvit-ui-loader")?.shadowRoot
           ?.querySelector("devvit-surface")?.shadowRoot
           ?.querySelector("devvit-blocks-renderer")?.shadowRoot
-          ?.querySelector("devvit-blocks-web-view")?.shadowRoot
-          ?.querySelector("iframe");
+          ?.querySelector("devvit-blocks-web-view");
         
-        // If we can't find the iframe, return error
-        if (!targetIframe) {
+        // If we can't find the WebView element, return error
+        if (!webViewElement) {
           return { 
             success: false, 
-            error: "Could not find Devvit iframe" 
+            error: "Could not find Devvit WebView element" 
           };
         }
         
@@ -282,14 +291,16 @@ export class BrowserManager {
           const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
           let timeoutId: number;
           
-          // Function to handle the response
-          function messageHandler(event: MessageEvent) {
-            const data = event.data;
+          // Function to handle the custom event response
+          function customEventHandler(event: CustomEvent) {
+            const data = event.detail;
             
             // Only handle messages with our requestId
             if (data && data.requestId === requestId) {
+              console.log('Response received via custom event:', data);
+              
               // Clean up
-              window.removeEventListener('message', messageHandler);
+              webViewElement?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
               clearTimeout(timeoutId);
               
               if (data.type === 'devvit_debug_result') {
@@ -310,7 +321,7 @@ export class BrowserManager {
           
           // Set up timeout
           timeoutId = window.setTimeout(() => {
-            window.removeEventListener('message', messageHandler);
+            webViewElement?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
             resolve({ 
               success: false, 
               error: "Timeout waiting for iframe response. Make sure DebugEndpoint.start() is called in your client code.",
@@ -318,16 +329,17 @@ export class BrowserManager {
             });
           }, 5000) as unknown as number;
           
-          // Listen for response
-          window.addEventListener('message', messageHandler);
+          // Listen for the custom event response
+          webViewElement.addEventListener('devvit-web-view-message', customEventHandler as EventListener);
           
-          // Send the function call message
-          targetIframe.contentWindow?.postMessage({
+          // Send the function call message using the WebView's postMessage method
+          // Need to cast to any since TypeScript doesn't know about this custom element type
+          (webViewElement as any).postMessage({
             type: 'devvit_debug_call',
             requestId: requestId,
             functionName: fnName,
             args: fnArgs
-          }, '*');
+          });
           
           console.log(`Sent function call to iframe: ${fnName}(${JSON.stringify(fnArgs)}), waiting for response...`);
         });
