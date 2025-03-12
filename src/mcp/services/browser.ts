@@ -252,14 +252,12 @@ export class BrowserManager {
    * This is a safer alternative to evaluateInDevvitIframe as it doesn't use eval
    * 
    * Communication mechanism:
-   * 1. We find the devvit-blocks-web-view element in the shadow DOM
-   * 2. We use its postMessage method to send messages to the iframe
-   * 3. We listen for the 'devvit-web-view-message' custom event to receive responses
+   * 1. We find the iframe element in the shadow DOM
+   * 2. We directly use iframe.contentWindow.postMessage to send messages
+   * 3. We listen for responses on the window message event
    * 
-   * This approach is necessary because:
-   * - Direct iframe.contentWindow.postMessage fails due to cross-origin restrictions
-   * - The web view's message handler calls stopImmediatePropagation() which prevents
-   *   window-level message listeners from receiving the messages
+   * This approach bypasses the WebView element's message handling which was
+   * causing issues with the custom event approach.
    */
   async callDevvitFunction(functionName: string, args: any[] = []): Promise<BrowserResponse> {
     try {
@@ -270,19 +268,46 @@ export class BrowserManager {
         };
       }
 
-      // Use the WebView element's postMessage and custom event to communicate with the iframe
+      // Use direct iframe.contentWindow.postMessage to communicate with the iframe
       const result = await this.page.evaluate(async ({ fnName, fnArgs }) => {
-        // Find the WebView element
-        const webViewElement = document.querySelector("shreddit-devvit-ui-loader")?.shadowRoot
-          ?.querySelector("devvit-surface")?.shadowRoot
-          ?.querySelector("devvit-blocks-renderer")?.shadowRoot
-          ?.querySelector("devvit-blocks-web-view");
-        
-        // If we can't find the WebView element, return error
-        if (!webViewElement) {
+        // Find the iframe through shadow DOM
+        const devvitLoader = document.querySelector("shreddit-devvit-ui-loader");
+        if (!devvitLoader) {
           return { 
             success: false, 
-            error: "Could not find Devvit WebView element" 
+            error: "No devvit loader found" 
+          };
+        }
+
+        const surface = devvitLoader.shadowRoot?.querySelector("devvit-surface");
+        if (!surface) {
+          return { 
+            success: false, 
+            error: "No surface found" 
+          };
+        }
+
+        const renderer = surface.shadowRoot?.querySelector("devvit-blocks-renderer");
+        if (!renderer) {
+          return { 
+            success: false, 
+            error: "No renderer found" 
+          };
+        }
+
+        const webView = renderer.shadowRoot?.querySelector("devvit-blocks-web-view");
+        if (!webView) {
+          return { 
+            success: false, 
+            error: "No web view found" 
+          };
+        }
+
+        const iframe = webView.shadowRoot?.querySelector("iframe");
+        if (!iframe) {
+          return { 
+            success: false, 
+            error: "No iframe found" 
           };
         }
         
@@ -291,29 +316,29 @@ export class BrowserManager {
           const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
           let timeoutId: number;
           
-          // Function to handle the custom event response
-          function customEventHandler(event: CustomEvent) {
-            const data = event.detail;
+          // Function to handle the window message response
+          function messageHandler(event: MessageEvent) {
+            const data = event.data;
             
             // Only handle messages with our requestId
             if (data && data.requestId === requestId) {
-              console.log('Response received via custom event:', data);
+              console.log('Response received via window message:', data);
               
               // Clean up
-              webViewElement?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
+              window.removeEventListener('message', messageHandler);
               clearTimeout(timeoutId);
               
               if (data.type === 'devvit_debug_result') {
                 resolve({ 
                   success: true, 
                   result: data.result,
-                  method: "function_call" 
+                  method: "direct_iframe" 
                 });
               } else if (data.type === 'devvit_debug_error') {
                 resolve({ 
                   success: false, 
                   error: `Function error: ${data.error}`,
-                  method: "function_call" 
+                  method: "direct_iframe" 
                 });
               }
             }
@@ -321,27 +346,42 @@ export class BrowserManager {
           
           // Set up timeout
           timeoutId = window.setTimeout(() => {
-            webViewElement?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
+            window.removeEventListener('message', messageHandler);
             resolve({ 
               success: false, 
               error: "Timeout waiting for iframe response. Make sure DebugEndpoint.start() is called in your client code.",
-              method: "function_call" 
+              method: "direct_iframe" 
             });
           }, 5000) as unknown as number;
           
-          // Listen for the custom event response
-          webViewElement.addEventListener('devvit-web-view-message', customEventHandler as EventListener);
+          // Listen for the window message response
+          window.addEventListener('message', messageHandler);
           
-          // Send the function call message using the WebView's postMessage method
-          // Need to cast to any since TypeScript doesn't know about this custom element type
-          (webViewElement as any).postMessage({
+          // Send message directly to iframe.contentWindow
+          const message = {
             type: 'devvit_debug_call',
             requestId: requestId,
             functionName: fnName,
             args: fnArgs
-          });
+          };
           
-          console.log(`Sent function call to iframe: ${fnName}(${JSON.stringify(fnArgs)}), waiting for response...`);
+          try {
+            // Use iframe.contentWindow.postMessage directly
+            if (!iframe.contentWindow) {
+              throw new Error('iframe.contentWindow is null');
+            }
+            iframe.contentWindow.postMessage(message, '*');
+            console.log(`Sent function call directly to iframe.contentWindow: ${fnName}(${JSON.stringify(fnArgs)}), waiting for response...`);
+          } catch (error) {
+            console.error('Error sending message to iframe:', error);
+            window.removeEventListener('message', messageHandler);
+            clearTimeout(timeoutId);
+            resolve({ 
+              success: false, 
+              error: `Error sending message to iframe: ${String(error)}`,
+              method: "direct_iframe_error" 
+            });
+          }
         });
       }, { fnName: functionName, fnArgs: args });
 
