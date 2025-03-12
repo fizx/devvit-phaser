@@ -12,7 +12,15 @@ declare global {
   }
 }
 
-const router: { [id: string]: SyncedDataManager } = {};
+// Define the router first to avoid circular references in TypeScript
+// We'll use a type declaration that matches the SyncedDataManager class structure
+type SyncedDataManagerInstance = {
+  id: DataManagerId;
+  ready: boolean;
+  applyMutation: (mutation: DataManagerMutation, setReady: boolean) => void;
+};
+
+const router: { [id: string]: SyncedDataManagerInstance } = {};
 window.me = new Phaser.Data.DataManager(new Phaser.Events.EventEmitter());
 
 // Set up global message handler
@@ -45,7 +53,7 @@ window.addEventListener("message", (event) => {
     const target = router[mutation.dataManagerId.id];
     if (target) {
       console.log("applying mutation", mutation);
-      // @ts-ignore - accessing private method
+      // No longer need @ts-ignore as applyMutation is not private
       target.applyMutation(mutation, event.data?.data?.message?.ready);
     } else {
       console.warn("No target found for mutation", mutation);
@@ -85,9 +93,9 @@ export class SyncedDataManager extends Phaser.Data.DataManager {
   /**
    * @internal
    * This method is used by the message handler in this file
-   * It's marked private for encapsulation but needs to be accessible from the message handler
+   * It's marked internal (not private) so it can be accessed by the router
    */
-  private applyMutation(mutation: DataManagerMutation, setReady: boolean) {
+  applyMutation(mutation: DataManagerMutation, setReady: boolean) {
     Object.entries(mutation.updates || {}).forEach(([key, value]) => {
       console.log("setting", key, value);
       super.set(key, value);
