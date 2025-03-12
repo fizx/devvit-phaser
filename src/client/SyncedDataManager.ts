@@ -20,8 +20,14 @@ console.log("adding message listener");
 window.addEventListener("message", (event) => {
   console.log("Received message", event.data);
 
-  const screenId = (event.data.data.message.screenId ||
-    event.data.data.message?.data?.screenId) as string | undefined;
+  // Validate message structure before processing
+  if (!event.data?.data?.message) {
+    // This is not a valid data manager message, ignore it
+    return;
+  }
+
+  const screenId = (event.data?.data?.message?.screenId ||
+    event.data?.data?.message?.data?.screenId) as string | undefined;
   if (screenId) {
     console.log("Received screenId", screenId);
     window.me.set("screenId", screenId);
@@ -30,8 +36,8 @@ window.addEventListener("message", (event) => {
 
   try {
     const mutation =
-      event.data.data.message.mutation ||
-      (event.data.data.message.data.mutation as
+      event.data?.data?.message?.mutation ||
+      (event.data?.data?.message?.data?.mutation as
         | DataManagerMutation
         | undefined);
     if (!mutation || !mutation?.dataManagerId?.id) return;
@@ -40,7 +46,7 @@ window.addEventListener("message", (event) => {
     if (target) {
       console.log("applying mutation", mutation);
       // @ts-ignore - accessing private method
-      target.applyMutation(mutation, event.data.data.message.ready);
+      target.applyMutation(mutation, event.data?.data?.message?.ready);
     } else {
       console.warn("No target found for mutation", mutation);
     }
