@@ -253,11 +253,11 @@ export class BrowserManager {
    * 
    * Communication mechanism:
    * 1. We find the iframe element in the shadow DOM
-   * 2. We directly use iframe.contentWindow.postMessage to send messages
-   * 3. We listen for responses on the window message event
+   * 2. We directly use iframe.contentWindow.postMessage to send messages IN
+   * 3. We listen for responses on the 'devvit-web-view-message' custom event OUT
    * 
-   * This approach bypasses the WebView element's message handling which was
-   * causing issues with the custom event approach.
+   * This hybrid approach uses direct iframe communication for sending, but
+   * custom events for receiving - avoiding issues with cross-origin message handling.
    */
   async callDevvitFunction(functionName: string, args: any[] = []): Promise<BrowserResponse> {
     try {
@@ -268,7 +268,7 @@ export class BrowserManager {
         };
       }
 
-      // Use direct iframe.contentWindow.postMessage to communicate with the iframe
+      // Use the hybrid approach to communicate with the iframe
       const result = await this.page.evaluate(async ({ fnName, fnArgs }) => {
         // Find the iframe through shadow DOM
         const devvitLoader = document.querySelector("shreddit-devvit-ui-loader");
@@ -316,29 +316,29 @@ export class BrowserManager {
           const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
           let timeoutId: number;
           
-          // Function to handle the window message response
-          function messageHandler(event: MessageEvent) {
-            const data = event.data;
+          // Function to handle the custom event response
+          function customEventHandler(event: CustomEvent) {
+            const data = event.detail;
             
             // Only handle messages with our requestId
             if (data && data.requestId === requestId) {
-              console.log('Response received via window message:', data);
+              console.log('Response received via custom event:', data);
               
               // Clean up
-              window.removeEventListener('message', messageHandler);
+              window.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
               clearTimeout(timeoutId);
               
               if (data.type === 'devvit_debug_result') {
                 resolve({ 
                   success: true, 
                   result: data.result,
-                  method: "direct_iframe" 
+                  method: "hybrid_iframe_custom_event" 
                 });
               } else if (data.type === 'devvit_debug_error') {
                 resolve({ 
                   success: false, 
                   error: `Function error: ${data.error}`,
-                  method: "direct_iframe" 
+                  method: "hybrid_iframe_custom_event" 
                 });
               }
             }
@@ -346,16 +346,16 @@ export class BrowserManager {
           
           // Set up timeout
           timeoutId = window.setTimeout(() => {
-            window.removeEventListener('message', messageHandler);
+            window.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
             resolve({ 
               success: false, 
               error: "Timeout waiting for iframe response. Make sure DebugEndpoint.start() is called in your client code.",
-              method: "direct_iframe" 
+              method: "hybrid_iframe_custom_event" 
             });
           }, 5000) as unknown as number;
           
-          // Listen for the window message response
-          window.addEventListener('message', messageHandler);
+          // Listen for the custom event response
+          window.addEventListener('devvit-web-view-message', customEventHandler as EventListener);
           
           // Send message directly to iframe.contentWindow
           const message = {
@@ -366,20 +366,20 @@ export class BrowserManager {
           };
           
           try {
-            // Use iframe.contentWindow.postMessage directly
+            // Use iframe.contentWindow.postMessage directly for sending IN
             if (!iframe.contentWindow) {
               throw new Error('iframe.contentWindow is null');
             }
             iframe.contentWindow.postMessage(message, '*');
-            console.log(`Sent function call directly to iframe.contentWindow: ${fnName}(${JSON.stringify(fnArgs)}), waiting for response...`);
+            console.log(`Sent function call directly to iframe.contentWindow: ${fnName}(${JSON.stringify(fnArgs)}), waiting for custom event response...`);
           } catch (error) {
             console.error('Error sending message to iframe:', error);
-            window.removeEventListener('message', messageHandler);
+            window.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
             clearTimeout(timeoutId);
             resolve({ 
               success: false, 
               error: `Error sending message to iframe: ${String(error)}`,
-              method: "direct_iframe_error" 
+              method: "hybrid_iframe_custom_event_error" 
             });
           }
         });
