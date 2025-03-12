@@ -325,7 +325,7 @@ export class BrowserManager {
               console.log('Response received via custom event:', data);
               
               // Clean up
-              window.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
+              webView?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
               clearTimeout(timeoutId);
               
               if (data.type === 'devvit_debug_result') {
@@ -346,7 +346,7 @@ export class BrowserManager {
           
           // Set up timeout
           timeoutId = window.setTimeout(() => {
-            window.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
+            webView?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
             resolve({ 
               success: false, 
               error: "Timeout waiting for iframe response. Make sure DebugEndpoint.start() is called in your client code.",
@@ -354,8 +354,8 @@ export class BrowserManager {
             });
           }, 5000) as unknown as number;
           
-          // Listen for the custom event response
-          window.addEventListener('devvit-web-view-message', customEventHandler as EventListener);
+          // Listen for the custom event response on the webView element, not window
+          webView?.addEventListener('devvit-web-view-message', customEventHandler as EventListener);
           
           // Send message directly to iframe.contentWindow
           const message = {
@@ -374,7 +374,7 @@ export class BrowserManager {
             console.log(`Sent function call directly to iframe.contentWindow: ${fnName}(${JSON.stringify(fnArgs)}), waiting for custom event response...`);
           } catch (error) {
             console.error('Error sending message to iframe:', error);
-            window.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
+            webView?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
             clearTimeout(timeoutId);
             resolve({ 
               success: false, 
