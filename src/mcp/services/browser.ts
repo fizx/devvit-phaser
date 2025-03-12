@@ -319,10 +319,10 @@ export class BrowserManager {
           // Function to handle the custom event response
           function customEventHandler(event: CustomEvent) {
             const data = event.detail;
+            console.log('Response received via custom event:', data);
             
             // Only handle messages with our requestId
             if (data && data.requestId === requestId) {
-              console.log('Response received via custom event:', data);
               
               // Clean up
               webView?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
