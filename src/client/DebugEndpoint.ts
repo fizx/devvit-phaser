@@ -67,7 +67,7 @@ export class DebugEndpoint {
         // Function call handling
         if (data && data.type === 'devvit_debug_call') {
           const { functionName, args = [], requestId } = data;
-          console.log(`Received debug call: ${functionName}(${args.map(a => JSON.stringify(a)).join(', ')})`);
+          console.log(`Received debug call: ${functionName}(${args.map((a: any) => JSON.stringify(a)).join(', ')})`);
           
           if (this.registeredFunctions[functionName]) {
             // Call the registered function with provided arguments
