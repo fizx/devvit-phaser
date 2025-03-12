@@ -73,14 +73,20 @@ export class DebugEndpoint {
             // Call the registered function with provided arguments
             const result = this.registeredFunctions[functionName](...(args || []));
             
-            // Send result back to parent
-            window.parent.postMessage({
+            // Create the response message
+            const responseMessage = {
               type: 'devvit_debug_result',
               requestId: requestId,
               result: result
-            }, '*');
+            };
             
-            console.log('Debug result sent back to parent:', result);
+            // Send result back to parent with detailed logging
+            console.log('About to send debug result with ID:', requestId);
+            window.parent.postMessage(responseMessage, '*');
+            
+            // Log after sending to help debug issues
+            console.log('Debug result sent back to parent. Message:', JSON.stringify(responseMessage));
+            console.log('Result data:', result);
           } else {
             // Function not found
             throw new Error(`Function '${functionName}' not registered with DebugEndpoint`);
@@ -94,29 +100,53 @@ export class DebugEndpoint {
             // Use the executeScript function instead of direct eval
             const result = this.registeredFunctions.executeScript(data.code);
             
-            window.parent.postMessage({
+            // Create the response message
+            const responseMessage = {
               type: 'devvit_debug_result',
               requestId: data.requestId,
               result: result
-            }, '*');
+            };
+            
+            // Send with detailed logging
+            console.log('About to send eval result with ID:', data.requestId);
+            window.parent.postMessage(responseMessage, '*');
+            
+            // Log after sending
+            console.log('Eval result sent back to parent. Message:', JSON.stringify(responseMessage));
           } catch (error) {
             console.error('Script execution error:', error);
-            window.parent.postMessage({
+            
+            // Create the error message
+            const errorMessage = {
               type: 'devvit_debug_error',
               requestId: data.requestId,
               error: error instanceof Error ? error.toString() : String(error)
-            }, '*');
+            };
+            
+            // Send with detailed logging
+            console.log('About to send error response with ID:', data.requestId);
+            window.parent.postMessage(errorMessage, '*');
+            
+            // Log after sending
+            console.log('Error sent back to parent. Message:', JSON.stringify(errorMessage));
           }
         }
       } catch (error: unknown) {
         console.error('Error in debug endpoint:', error);
         
-        // Send error back to parent
-        window.parent.postMessage({
+        // Create the error message
+        const errorMessage = {
           type: 'devvit_debug_error',
           requestId: event.data?.requestId,
           error: error instanceof Error ? error.toString() : String(error)
-        }, '*');
+        };
+        
+        // Send with detailed logging
+        console.log('About to send global error with ID:', event.data?.requestId);
+        window.parent.postMessage(errorMessage, '*');
+        
+        // Log after sending
+        console.log('Global error sent back to parent. Message:', JSON.stringify(errorMessage));
       }
     });
     
