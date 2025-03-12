@@ -24,6 +24,10 @@ export class BrowserManager {
   private browser: Browser | null = null;
   private context: BrowserContext | null = null;
   private page: Page | null = null;
+  private pendingResponses: Map<string, { 
+    resolve: (value: any) => void;
+    timeout: NodeJS.Timeout;
+  }> = new Map();
 
   /**
    * Get current browser status
@@ -77,6 +81,9 @@ export class BrowserManager {
       });
       
       this.page = await this.context.newPage();
+      
+      // Set up exposed function to handle iframe messages
+      await this.setupExposedFunctions();
 
       return {
         success: true,
@@ -215,49 +222,18 @@ export class BrowserManager {
   }
   
   /**
-   * Evaluate JavaScript in the Devvit iframe context using the postMessage API
-   * This approach works with the DebugEndpoint in the client code
-   */
-  async evaluateInDevvitIframe(code: string): Promise<BrowserResponse> {
-    try {
-      if (!this.browser || !this.page) {
-        return {
-          success: false,
-          message: "Browser is not running. Launch it first."
-        };
-      }
-
-      // Parse the code to determine the best approach
-      const bodyModificationRegex = /document\.body\.innerHTML\s*=\s*['"](.*)['"];?/;
-      const match = code.match(bodyModificationRegex);
-      
-      if (match && match[1]) {
-        // For body modifications, use the modifyBody function directly
-        return await this.callDevvitFunction('modifyBody', [match[1]]);
-      } else {
-        // For other code, redirect to the executeScript function
-        return await this.callDevvitFunction('executeScript', [code]);
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      return {
-        success: false,
-        message: `Devvit iframe evaluation failed: ${errorMessage}`
-      };
-    }
-  }
-  
-  /**
    * Call a predefined function in the Devvit iframe context
-   * This is a safer alternative to evaluateInDevvitIframe as it doesn't use eval
+   * This is a safer alternative to using direct code evaluation
    * 
    * Communication mechanism:
    * 1. We find the iframe element in the shadow DOM
    * 2. We directly use iframe.contentWindow.postMessage to send messages IN
-   * 3. We listen for responses on the 'devvit-web-view-message' custom event OUT
+   * 3. We listen for responses on the 'devvit-web-view-message' custom event OUT via an exposed function
    * 
-   * This hybrid approach uses direct iframe communication for sending, but
-   * custom events for receiving - avoiding issues with cross-origin message handling.
+   * This approach uses:
+   * - Direct iframe.contentWindow.postMessage for sending
+   * - page.exposeFunction + custom events for receiving
+   * - Promise-based response tracking outside the evaluate call
    */
   async callDevvitFunction(functionName: string, args: any[] = []): Promise<BrowserResponse> {
     try {
@@ -268,146 +244,117 @@ export class BrowserManager {
         };
       }
 
-      // Use the hybrid approach to communicate with the iframe
-      const result = await this.page.evaluate(async ({ fnName, fnArgs }) => {
-        // Find the iframe through shadow DOM
-        const devvitLoader = document.querySelector("shreddit-devvit-ui-loader");
-        if (!devvitLoader) {
-          return { 
+      // Generate a unique request ID
+      const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      // Create a promise that will be resolved when we receive a response
+      const responsePromise = new Promise<any>((resolve) => {
+        // Set up timeout to handle cases where we don't get a response
+        const timeout = setTimeout(() => {
+          // If we timeout, resolve with an error
+          resolve({ 
             success: false, 
-            error: "No devvit loader found" 
-          };
-        }
-
-        const surface = devvitLoader.shadowRoot?.querySelector("devvit-surface");
-        if (!surface) {
-          return { 
-            success: false, 
-            error: "No surface found" 
-          };
-        }
-
-        const renderer = surface.shadowRoot?.querySelector("devvit-blocks-renderer");
-        if (!renderer) {
-          return { 
-            success: false, 
-            error: "No renderer found" 
-          };
-        }
-
-        const webView = renderer.shadowRoot?.querySelector("devvit-blocks-web-view");
-        if (!webView) {
-          return { 
-            success: false, 
-            error: "No web view found" 
-          };
-        }
-
-        const iframe = webView.shadowRoot?.querySelector("iframe");
-        if (!iframe) {
-          return { 
-            success: false, 
-            error: "No iframe found" 
-          };
-        }
+            error: "Timeout waiting for iframe response. Make sure DebugEndpoint.start() is called in your client code."
+          });
+          // Remove this request from the pending responses map
+          this.pendingResponses.delete(requestId);
+        }, 5000);
         
-        // Send the function call and wait for response
-        return new Promise((resolve) => {
-          const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-          let timeoutId: number;
-          
-          // Function to handle the custom event response
-          function customEventHandler(event: CustomEvent) {
-            const data = event.detail;
-            console.log('Response received via custom event:', data);
-            
-            // Only handle messages with our requestId
-            if (data && data.requestId === requestId) {
-              
-              // Clean up
-              webView?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
-              clearTimeout(timeoutId);
-              
-              if (data.type === 'devvit_debug_result') {
-                resolve({ 
-                  success: true, 
-                  result: data.result,
-                  method: "hybrid_iframe_custom_event" 
-                });
-              } else if (data.type === 'devvit_debug_error') {
-                resolve({ 
-                  success: false, 
-                  error: `Function error: ${data.error}`,
-                  method: "hybrid_iframe_custom_event" 
-                });
-              }
-            }
+        // Store the resolve function and timeout so we can cancel it when we get a response
+        this.pendingResponses.set(requestId, { resolve, timeout });
+      });
+      
+      // Send the message to the iframe - this is just the sending part
+      const sendResult = await this.page.evaluate(async ({ fnName, fnArgs, reqId }) => {
+        try {
+          // Find the iframe through shadow DOM
+          const devvitLoader = document.querySelector("shreddit-devvit-ui-loader");
+          if (!devvitLoader) {
+            return { success: false, error: "No devvit loader found" };
+          }
+
+          const surface = devvitLoader.shadowRoot?.querySelector("devvit-surface");
+          if (!surface) {
+            return { success: false, error: "No surface found" };
+          }
+
+          const renderer = surface.shadowRoot?.querySelector("devvit-blocks-renderer");
+          if (!renderer) {
+            return { success: false, error: "No renderer found" };
+          }
+
+          const webView = renderer.shadowRoot?.querySelector("devvit-blocks-web-view");
+          if (!webView) {
+            return { success: false, error: "No web view found" };
+          }
+
+          const iframe = webView.shadowRoot?.querySelector("iframe");
+          if (!iframe) {
+            return { success: false, error: "No iframe found" };
           }
           
-          // Set up timeout
-          timeoutId = window.setTimeout(() => {
-            webView?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
-            resolve({ 
-              success: false, 
-              error: "Timeout waiting for iframe response. Make sure DebugEndpoint.start() is called in your client code.",
-              method: "hybrid_iframe_custom_event" 
-            });
-          }, 5000) as unknown as number;
-          
-          // Listen for the custom event response on the webView element, not window
-          // IMPORTANT: Install event listener BEFORE sending message to avoid race condition
-          webView?.addEventListener('devvit-web-view-message', customEventHandler as EventListener);
+          if (!iframe.contentWindow) {
+            return { success: false, error: "iframe.contentWindow is null" };
+          }
           
           // Create the message to send
           const message = {
             type: 'devvit_debug_call',
-            requestId: requestId,
+            requestId: reqId,
             functionName: fnName,
             args: fnArgs
           };
           
-          // Small delay to ensure event listener is properly attached before sending
-          setTimeout(() => {
-            try {
-              // Use iframe.contentWindow.postMessage directly for sending IN
-              if (!iframe.contentWindow) {
-                throw new Error('iframe.contentWindow is null');
-              }
-              iframe.contentWindow.postMessage(message, '*');
-              console.log(`Sent function call directly to iframe.contentWindow: ${fnName}(${JSON.stringify(fnArgs)}), waiting for custom event response...`);
-            } catch (error) {
-              console.error('Error sending message to iframe:', error);
-              webView?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
-              clearTimeout(timeoutId);
-              resolve({ 
-                success: false, 
-                error: `Error sending message to iframe: ${String(error)}`,
-                method: "hybrid_iframe_custom_event_error" 
-              });
-            }
-          }, 25); // 25ms delay to ensure event listener is attached
-        });
-      }, { fnName: functionName, fnArgs: args });
-
-      // Handle result
-      if (result && typeof result === 'object' && 'success' in result) {
-        const typedResult = result as {
-          success: boolean;
-          method?: string;
-          result?: any;
-          error?: string;
-        };
+          // Use iframe.contentWindow.postMessage directly for sending
+          iframe.contentWindow.postMessage(message, '*');
+          console.log(`Sent function call to iframe.contentWindow: ${fnName}(${JSON.stringify(fnArgs)}), requestId: ${reqId}`);
+          
+          return { success: true };
+        } catch (error) {
+          return { 
+            success: false, 
+            error: `Error sending message to iframe: ${String(error)}`
+          };
+        }
+      }, { fnName: functionName, fnArgs: args, reqId: requestId });
+      
+      // If we failed to send the message, return an error
+      if (!sendResult.success) {
+        // Remove this request from the pending responses map
+        if (this.pendingResponses.has(requestId)) {
+          const { timeout } = this.pendingResponses.get(requestId)!;
+          clearTimeout(timeout);
+          this.pendingResponses.delete(requestId);
+        }
         
-        if (typedResult.success === true) {
+        return {
+          success: false,
+          message: `Failed to send message to iframe: ${sendResult.error || 'Unknown error'}`,
+          data: { functionName, args }
+        };
+      }
+      
+      // Wait for the response via our exposed function - this happens outside the evaluate call
+      const result = await responsePromise;
+      
+      // Handle the result
+      if (result && typeof result === 'object') {
+        if (result.type === 'devvit_debug_result') {
           return {
             success: true,
             message: `Function ${functionName} executed successfully in Devvit iframe`,
-            data: { result: typedResult.result }
+            data: { result: result.result }
           };
-        } else if ('error' in typedResult) {
+        } else if (result.type === 'devvit_debug_error') {
           return {
             success: false,
-            message: `Function call failed: ${typedResult.error || 'Unknown error'}`,
+            message: `Function call failed: ${result.error || 'Unknown error'}`,
+            data: { functionName, args }
+          };
+        } else if ('error' in result) {
+          return {
+            success: false,
+            message: `Function call failed: ${result.error || 'Unknown error'}`,
             data: { functionName, args }
           };
         }
@@ -425,6 +372,49 @@ export class BrowserManager {
         message: `Devvit function call failed: ${errorMessage}`
       };
     }
+  }
+
+  /**
+   * Setup exposed functions in Playwright to handle message passing
+   * This allows us to receive messages from the iframe even in isolated contexts
+   */
+  private async setupExposedFunctions(): Promise<void> {
+    if (!this.page) return;
+    
+    // Expose a function to handle devvit iframe responses
+    await this.page.exposeFunction('__handleDevvitIframeResponse', (data: any) => {
+      // Check if we have a pending response with this requestId
+      const requestId = data?.requestId;
+      if (!requestId || !this.pendingResponses.has(requestId)) {
+        console.log('Received response for unknown requestId:', requestId);
+        return;
+      }
+      
+      const { resolve, timeout } = this.pendingResponses.get(requestId)!;
+      
+      // Clear the timeout and delete the pending response
+      clearTimeout(timeout);
+      this.pendingResponses.delete(requestId);
+      
+      // Resolve the promise with the response data
+      resolve(data);
+    });
+    
+    // Set up a custom event listener in the page that will call our exposed function
+    await this.page.evaluate(() => {
+      // Function to handle custom events from the webView
+      function handleCustomEvent(event: CustomEvent) {
+        const data = event.detail;
+        // Forward the event data to our exposed function
+        // @ts-ignore - This function exists but TS doesn't know about it
+        window.__handleDevvitIframeResponse(data);
+      }
+      
+      // Add event listener to window to catch all custom events
+      window.addEventListener('devvit-web-view-message', handleCustomEvent as EventListener);
+      
+      console.log('Devvit iframe message handler installed successfully');
+    });
   }
 
   /**
@@ -562,6 +552,12 @@ export class BrowserManager {
           message: "No browser is running"
         };
       }
+
+      // Clear any pending responses
+      for (const { timeout } of this.pendingResponses.values()) {
+        clearTimeout(timeout);
+      }
+      this.pendingResponses.clear();
 
       await this.browser.close();
       this.browser = null;
