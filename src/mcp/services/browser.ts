@@ -355,9 +355,10 @@ export class BrowserManager {
           }, 5000) as unknown as number;
           
           // Listen for the custom event response on the webView element, not window
+          // IMPORTANT: Install event listener BEFORE sending message to avoid race condition
           webView?.addEventListener('devvit-web-view-message', customEventHandler as EventListener);
           
-          // Send message directly to iframe.contentWindow
+          // Create the message to send
           const message = {
             type: 'devvit_debug_call',
             requestId: requestId,
@@ -365,23 +366,26 @@ export class BrowserManager {
             args: fnArgs
           };
           
-          try {
-            // Use iframe.contentWindow.postMessage directly for sending IN
-            if (!iframe.contentWindow) {
-              throw new Error('iframe.contentWindow is null');
+          // Small delay to ensure event listener is properly attached before sending
+          setTimeout(() => {
+            try {
+              // Use iframe.contentWindow.postMessage directly for sending IN
+              if (!iframe.contentWindow) {
+                throw new Error('iframe.contentWindow is null');
+              }
+              iframe.contentWindow.postMessage(message, '*');
+              console.log(`Sent function call directly to iframe.contentWindow: ${fnName}(${JSON.stringify(fnArgs)}), waiting for custom event response...`);
+            } catch (error) {
+              console.error('Error sending message to iframe:', error);
+              webView?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
+              clearTimeout(timeoutId);
+              resolve({ 
+                success: false, 
+                error: `Error sending message to iframe: ${String(error)}`,
+                method: "hybrid_iframe_custom_event_error" 
+              });
             }
-            iframe.contentWindow.postMessage(message, '*');
-            console.log(`Sent function call directly to iframe.contentWindow: ${fnName}(${JSON.stringify(fnArgs)}), waiting for custom event response...`);
-          } catch (error) {
-            console.error('Error sending message to iframe:', error);
-            webView?.removeEventListener('devvit-web-view-message', customEventHandler as EventListener);
-            clearTimeout(timeoutId);
-            resolve({ 
-              success: false, 
-              error: `Error sending message to iframe: ${String(error)}`,
-              method: "hybrid_iframe_custom_event_error" 
-            });
-          }
+          }, 25); // 25ms delay to ensure event listener is attached
         });
       }, { fnName: functionName, fnArgs: args });
 
