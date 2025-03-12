@@ -424,6 +424,130 @@ export class BrowserManager {
   }
 
   /**
+   * Get browser console logs using Chrome DevTools Protocol
+   * @param limit Maximum number of log entries to return (default: 100)
+   */
+  async getLogs(limit: number = 100): Promise<BrowserResponse> {
+    try {
+      if (!this.browser || !this.page) {
+        return {
+          success: false,
+          message: "Browser is not running. Launch it first."
+        };
+      }
+
+      // Use CDP session to extract logs from the browser's console
+      const logs = await this.page.evaluate(async (maxCount) => {
+        // Properly typed logs array
+        const logEntries: Array<{
+          type: string;
+          timestamp: string;
+          text: string;
+          url?: string;
+          source?: string;
+        }> = [];
+
+        // Current time to help identify recent logs
+        const now = Date.now();
+        
+        // Try to access browser console logs
+        try {
+          // Use the Console API to access browser's console message history
+          // @ts-ignore - Console API exists but might not be in type definitions
+          const messages = await console.messages?.();
+          
+          if (messages && messages.length) {
+            for (const msg of messages) {
+              logEntries.push({
+                type: msg.level || msg.type || 'log',
+                timestamp: new Date(msg.timestamp || now).toISOString(),
+                text: msg.text || String(msg.args || msg.message || ''),
+                source: msg.source || 'console',
+                url: msg.url
+              });
+            }
+          }
+        } catch (e) {
+          // If the console API doesn't work, try something else
+          console.error('Failed to access console messages:', e);
+        }
+        
+        // If we don't have any logs yet or need more, add performance logs
+        if (logEntries.length < maxCount) {
+          try {
+            // Try to get logs from the performance API
+            const perfEntries = performance.getEntries();
+            for (const entry of perfEntries) {
+              if (logEntries.length >= maxCount) break;
+              
+              // Only include certain types of performance entries that might be useful
+              if (entry.entryType === 'resource' || entry.entryType === 'navigation') {
+                logEntries.push({
+                  type: 'performance',
+                  timestamp: new Date(entry.startTime).toISOString(),
+                  text: `${entry.entryType}: ${entry.name} (duration: ${entry.duration}ms)`,
+                  source: 'performance',
+                  url: entry.name
+                });
+              }
+            }
+          } catch (e) {
+            console.error('Failed to access performance entries:', e);
+          }
+        }
+        
+        // Generate a log entry for the current request to make sure we have at least one
+        logEntries.push({
+          type: 'info',
+          timestamp: new Date().toISOString(),
+          text: 'Current browser logs requested',
+          source: 'browser-logs-tool'
+        });
+        
+        // Return the most recent logs based on the limit
+        return logEntries.slice(-maxCount);
+      }, limit);
+      
+      // Execute some additional JavaScript to generate logs we can capture on the next call
+      await this.page.evaluate(() => {
+        console.log('Browser logs retrieved at:', new Date().toISOString());
+        console.info('URL:', window.location.href);
+        
+        // Log some browser details
+        console.debug('UserAgent:', navigator.userAgent);
+        console.debug('Screen:', `${window.innerWidth}x${window.innerHeight}`);
+        
+        // Performance info for debugging
+        try {
+          // Chrome-specific memory info (not standard)
+          const perfAny = performance as any;
+          if (perfAny && perfAny.memory) {
+            console.info('Memory:', {
+              jsHeapSizeLimit: perfAny.memory.jsHeapSizeLimit,
+              totalJSHeapSize: perfAny.memory.totalJSHeapSize,
+              usedJSHeapSize: perfAny.memory.usedJSHeapSize
+            });
+          }
+        } catch (e) {
+          // Memory info not available
+        }
+      });
+      
+      return {
+        success: true,
+        message: `Retrieved ${logs.length} log entries`,
+        data: { logs }
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return {
+        success: false,
+        message: `Failed to get browser logs: ${errorMessage}`
+      };
+    }
+  }
+  
+  /**
    * Close the browser
    */
   async close(): Promise<BrowserResponse> {

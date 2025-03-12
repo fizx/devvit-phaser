@@ -195,6 +195,19 @@ function registerTools(
   );
 
   server.tool(
+    "browser-logs",
+    { 
+      lines: z.number().optional().default(100)
+    },
+    async ({ lines }) => {
+      const result = await browserManager.getLogs(lines);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
+
+  server.tool(
     "browser-close",
     {},
     async () => {
