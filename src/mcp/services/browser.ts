@@ -227,89 +227,49 @@ export class BrowserManager {
         };
       }
 
-      // This will use postMessage to communicate with the iframe
-      const result = await this.page.evaluate(async (evalCode) => {
-        // Helper function to recursively search for iframe in shadow DOM
-        function findDevvitIframe(startElement: Element): HTMLIFrameElement | null {
-          // If this is a web-view element with a shadow root that contains an iframe, return the iframe
-          if (
-            startElement.tagName.toLowerCase() === 'devvit-blocks-web-view' && 
-            startElement.shadowRoot
-          ) {
-            const iframe = startElement.shadowRoot.querySelector('iframe');
-            if (iframe) return iframe;
-          }
-          
-          // If this element has a shadow root, search in its children
-          if (startElement.shadowRoot) {
-            // First check direct children
-            const webView = startElement.shadowRoot.querySelector('devvit-blocks-web-view');
-            if (webView) {
-              const iframe = findDevvitIframe(webView);
-              if (iframe) return iframe;
-            }
-            
-            // Then try all children recursively
-            const children = Array.from(startElement.shadowRoot.children);
-            for (const child of children) {
-              const iframe = findDevvitIframe(child);
-              if (iframe) return iframe;
-            }
-          }
-          
-          return null;
-        }
+      // Parse the code to determine the best approach
+      const bodyModificationRegex = /document\.body\.innerHTML\s*=\s*['"](.*)['"];?/;
+      const match = code.match(bodyModificationRegex);
+      
+      if (match && match[1]) {
+        // For body modifications, use the modifyBody function directly
+        return await this.callDevvitFunction('modifyBody', [match[1]]);
+      } else {
+        // For other code, redirect to the executeScript function
+        return await this.callDevvitFunction('executeScript', [code]);
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return {
+        success: false,
+        message: `Devvit iframe evaluation failed: ${errorMessage}`
+      };
+    }
+  }
+  
+  /**
+   * Call a predefined function in the Devvit iframe context
+   * This is a safer alternative to evaluateInDevvitIframe as it doesn't use eval
+   */
+  async callDevvitFunction(functionName: string, args: any[] = []): Promise<BrowserResponse> {
+    try {
+      if (!this.browser || !this.page) {
+        return {
+          success: false,
+          message: "Browser is not running. Launch it first."
+        };
+      }
 
-        // Find the iframe using various search strategies
-        let targetIframe: HTMLIFrameElement | null = null;
+      // Use postMessage to call a predefined function in the iframe
+      const result = await this.page.evaluate(async ({ fnName, fnArgs }) => {
+        // Find the iframe using the correct nested shadow DOM selector
+        const targetIframe = document.querySelector("shreddit-devvit-ui-loader")?.shadowRoot
+          ?.querySelector("devvit-surface")?.shadowRoot
+          ?.querySelector("devvit-blocks-renderer")?.shadowRoot
+          ?.querySelector("devvit-blocks-web-view")?.shadowRoot
+          ?.querySelector("iframe");
         
-        // Try direct approach
-        const directLoader = document.querySelector('shreddit-devvit-ui-loader');
-        if (directLoader?.shadowRoot) {
-          const webView = directLoader.shadowRoot.querySelector('devvit-blocks-web-view');
-          if (webView?.shadowRoot) {
-            const iframe = webView.shadowRoot.querySelector('iframe');
-            if (iframe) {
-              console.log("Found iframe using direct approach");
-              targetIframe = iframe;
-            }
-          }
-        }
-        
-        // Try nested approach with renderer
-        if (!targetIframe) {
-          const origLoader = document.querySelector('shreddit-devvit-ui-loader');
-          if (origLoader?.shadowRoot) {
-            const renderer = origLoader.shadowRoot.querySelector('devvit-blocks-renderer');
-            if (renderer?.shadowRoot) {
-              const webView = renderer.shadowRoot.querySelector('devvit-blocks-web-view');
-              if (webView?.shadowRoot) {
-                const iframe = webView.shadowRoot.querySelector('iframe');
-                if (iframe) {
-                  console.log("Found iframe using original approach");
-                  targetIframe = iframe;
-                }
-              }
-            }
-          }
-        }
-        
-        // Try recursive search
-        if (!targetIframe) {
-          const shadowHosts = Array.from(document.querySelectorAll('*'))
-            .filter(el => el.shadowRoot);
-          
-          for (const element of shadowHosts) {
-            const iframe = findDevvitIframe(element);
-            if (iframe) {
-              console.log("Found iframe using recursive search");
-              targetIframe = iframe;
-              break;
-            }
-          }
-        }
-        
-        // If we still don't have an iframe, return error
+        // If we can't find the iframe, return error
         if (!targetIframe) {
           return { 
             success: false, 
@@ -317,7 +277,7 @@ export class BrowserManager {
           };
         }
         
-        // Found iframe, now use postMessage to communicate
+        // Send the function call and wait for response
         return new Promise((resolve) => {
           const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
           let timeoutId: number;
@@ -336,13 +296,13 @@ export class BrowserManager {
                 resolve({ 
                   success: true, 
                   result: data.result,
-                  method: "postMessage" 
+                  method: "function_call" 
                 });
               } else if (data.type === 'devvit_debug_error') {
                 resolve({ 
                   success: false, 
-                  error: `Eval error: ${data.error}`,
-                  method: "postMessage" 
+                  error: `Function error: ${data.error}`,
+                  method: "function_call" 
                 });
               }
             }
@@ -354,27 +314,27 @@ export class BrowserManager {
             resolve({ 
               success: false, 
               error: "Timeout waiting for iframe response. Make sure DebugEndpoint.start() is called in your client code.",
-              method: "postMessage" 
+              method: "function_call" 
             });
           }, 5000) as unknown as number;
           
           // Listen for response
           window.addEventListener('message', messageHandler);
           
-          // Send the code to the iframe
+          // Send the function call message
           targetIframe.contentWindow?.postMessage({
-            type: 'devvit_debug_eval',
+            type: 'devvit_debug_call',
             requestId: requestId,
-            code: evalCode
+            functionName: fnName,
+            args: fnArgs
           }, '*');
           
-          console.log("Sent evaluation request to iframe, waiting for response...");
+          console.log(`Sent function call to iframe: ${fnName}(${JSON.stringify(fnArgs)}), waiting for response...`);
         });
-      }, code);
+      }, { fnName: functionName, fnArgs: args });
 
-      // Handle different result scenarios
+      // Handle result
       if (result && typeof result === 'object' && 'success' in result) {
-        // Define a more specific type for better TypeScript support
         const typedResult = result as {
           success: boolean;
           method?: string;
@@ -385,76 +345,28 @@ export class BrowserManager {
         if (typedResult.success === true) {
           return {
             success: true,
-            message: `Script executed successfully in Devvit iframe (method: ${typedResult.method || 'unknown'})`,
+            message: `Function ${functionName} executed successfully in Devvit iframe`,
             data: { result: typedResult.result }
           };
         } else if ('error' in typedResult) {
-          // Fallback: Collect information about available frames
-          const frameInfo = await this.page.evaluate(() => {
-            const frames: any[] = [];
-            
-            // Get all iframes
-            document.querySelectorAll('iframe').forEach((iframe: HTMLIFrameElement) => {
-              frames.push({
-                id: iframe.id,
-                src: iframe.src,
-                name: iframe.name
-              });
-            });
-            
-            // Try to find iframes in shadow DOM
-            const shadowHosts = Array.from(document.querySelectorAll('*'))
-              .filter(el => el.shadowRoot);
-            
-            const shadowInfo: any[] = [];
-            shadowHosts.forEach(host => {
-              const hostInfo = {
-                tag: host.tagName,
-                id: host.id,
-                shadowChildren: [] as string[]
-              };
-              
-              if (host.shadowRoot) {
-                Array.from(host.shadowRoot.children).forEach(child => {
-                  hostInfo.shadowChildren.push(child.tagName);
-                });
-                
-                const shadowIframes = host.shadowRoot.querySelectorAll('iframe');
-                shadowIframes.forEach(iframe => {
-                  frames.push({
-                    id: iframe.id,
-                    src: iframe.src,
-                    name: iframe.name,
-                    inShadow: true,
-                    host: host.tagName
-                  });
-                });
-              }
-              
-              shadowInfo.push(hostInfo);
-            });
-            
-            return { frames, shadowInfo };
-          });
-          
           return {
             success: false,
-            message: `Devvit iframe evaluation failed: ${typedResult.error || 'Unknown error'}`,
-            data: { frameInfo }
+            message: `Function call failed: ${typedResult.error || 'Unknown error'}`,
+            data: { functionName, args }
           };
         }
       }
       
       return {
         success: false,
-        message: "Unexpected result format from evaluation",
+        message: "Unexpected result format from function call",
         data: { result }
       };
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         success: false,
-        message: `Devvit iframe evaluation failed: ${errorMessage}`
+        message: `Devvit function call failed: ${errorMessage}`
       };
     }
   }

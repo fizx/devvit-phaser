@@ -179,6 +179,20 @@ function registerTools(
       };
     }
   );
+  
+  server.tool(
+    "devvit-iframe-call",
+    { 
+      functionName: z.string(),
+      args: z.array(z.any()).optional()
+    },
+    async ({ functionName, args = [] }) => {
+      const result = await browserManager.callDevvitFunction(functionName, args);
+      return {
+        content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+      };
+    }
+  );
 
   server.tool(
     "browser-close",
